@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="174.0" prefWidth="225.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ba.unsa.etf.rpr.chatapp.LoginWindowController">
+   <children>
+      <TextField fx:id="loginWindow_usernameInputId" promptText="Username: ">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" top="15.0" />
+         </VBox.margin></TextField>
+      <Label fx:id="loginWindow_usernameErrorLabel" textFill="#e11a1a">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin></Label>
+      <PasswordField fx:id="loginWindow_passwordInputId" promptText="Password">
+         <VBox.margin>
+            <Insets left="15.0" right="15.0" top="5.0" />
+         </VBox.margin></PasswordField>
+      <Label fx:id="loginWindow_passwordErrorLabel" textFill="#e11a1a">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin></Label>
+      <ButtonBar prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+          <Button fx:id="loginWindow_registerButtonId" mnemonicParsing="false" onAction="#onLoginWindowRegisterButtonClick" text="Register" />
+            <Button fx:id="loginWindow_loginButtonId" mnemonicParsing="false" onAction="#onLoginWindowLoginButtonClick" text="Login" />
+        </buttons>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </ButtonBar>
+      <Label prefHeight="16.0" prefWidth="131.0" text="to do: centrirati dugmice" textFill="#ff9100" />
+   </children>
+</VBox>

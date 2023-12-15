@@ -1,0 +1,5 @@
+target/
+.idea/
+out/
+src/main/java/META-INF
+ChatAppServerRelay/src/META-INF
