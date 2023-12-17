@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -29,6 +28,14 @@ public class MainWindowController {
 
     ArrayList<String> chatLog;
     ObservableList<String> chatLogList;
+    Thread messageListener;
+
+    public MainWindowController(Socket clientSocket, PrintWriter out, BufferedReader in) {
+
+        this.clientSocket = clientSocket;
+        this.out = out;
+        this.in = in;
+    }
 
     @FXML
     public void initialize() {
@@ -39,9 +46,6 @@ public class MainWindowController {
             // todo: poslati informacije poput username, pw i ostalo tokom prijave
             // todo: IP adresa i port trebaju se citati iz .json config fajla
             // todo: ne zaboraviti pravilno zavrsiti threadove
-            clientSocket = new Socket("192.168.0.13",30120);
-            out = new PrintWriter(clientSocket.getOutputStream());
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
             chatLog = new ArrayList<>();
             chatLogList = FXCollections.observableArrayList("Welcome to the chatroom");
@@ -49,21 +53,24 @@ public class MainWindowController {
             mainWindow_chatLogId.setItems(chatLogList);
             mainWindow_chatLogId.setCellFactory(ComboBoxListCell.forListView(chatLogList));
 
-            Thread receiver = new Thread(() -> {
+            messageListener = new Thread(() -> {
 
                 try {
-                    while (true) {
+                    try {
+                        while (true) {
 
-                        String msg = in.readLine();
-                        if (msg == null)
-                            break;
+                            String msg = in.readLine();
+                            if (msg == null)
+                                break;
 
-                        System.out.println("Server: " + msg);
-                        Platform.runLater(() -> {
-                            chatLogList.add(msg);
-                            mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
-                        });
-                    }
+                            System.out.println("Server response: " + msg);
+                            Platform.runLater(() -> {
+
+                                chatLogList.add(msg);
+                                mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
+                            });
+                        }
+                    } catch (Exception e) { e.printStackTrace(); }
 
                     out.close();
                     clientSocket.close();
@@ -72,10 +79,9 @@ public class MainWindowController {
                 } catch (IOException e) { e.printStackTrace(); }
             });
 
-            receiver.start();
+            messageListener.start();
 
-        } catch (IOException e) { e.printStackTrace(); }
-
+        } catch (Exception e) { e.printStackTrace(); }
 
         mainWindow_chatInputId.setOnKeyReleased(event -> {
 
