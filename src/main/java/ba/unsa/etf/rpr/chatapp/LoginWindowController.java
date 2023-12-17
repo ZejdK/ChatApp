@@ -52,6 +52,11 @@ public class LoginWindowController {
         return !username.matches("\\w+");
     }
 
+    private boolean isPasswordValid(String password) {
+
+        return password.length() > 5 && password.length() < 70; // max pw length is 72 characters for blowfish cypher
+    }
+
     public void onLoginWindowRegisterButtonClick(ActionEvent actionEvent) throws IOException {
 
         String username = loginWindow_usernameInputId.getText();
