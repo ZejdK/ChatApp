@@ -1,6 +1,6 @@
 package ba.unsa.etf.rpr.chatapp;
 
-public final class ClientConfigDao {
+public class ClientConfigDao {
 
     private String serverUrl;
     private int serverPort;
