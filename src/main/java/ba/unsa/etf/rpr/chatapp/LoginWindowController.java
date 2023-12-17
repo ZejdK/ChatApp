@@ -49,7 +49,7 @@ public class LoginWindowController {
 
     private boolean isUsernameInvalid(String username) {
 
-        return !username.matches("\\w+");
+        return username.length() > 3 && username.length() < 64 && !username.matches("\\w+");
     }
 
     private boolean isPasswordValid(String password) {
