@@ -97,4 +97,13 @@ public class MainWindowController {
             }
         });
     }
+
+    @FXML
+    protected void shutdown() throws IOException {
+
+        System.out.println("Stopping...");
+        clientSocket.shutdownInput();
+        System.out.println("stopped");
+        //messageListener.join();
+    }
 }
