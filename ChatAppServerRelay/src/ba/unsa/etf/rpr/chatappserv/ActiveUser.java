@@ -46,7 +46,8 @@ public class ActiveUser implements Runnable {
         try {
             while (true) {
 
-                String msg = in.readLine();
+                System.out.println("Waiting for user input");
+                String msg = in.readLine(); // blocks the thread
                 if (msg == null)
                     break;
 
