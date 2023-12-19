@@ -6,5 +6,6 @@ module ba.unsa.etf.rpr.chatapp {
 
 
     opens ba.unsa.etf.rpr.chatapp to javafx.fxml;
+    exports ba.unsa.etf.rpr.chatapp.domain;
     exports ba.unsa.etf.rpr.chatapp;
 }

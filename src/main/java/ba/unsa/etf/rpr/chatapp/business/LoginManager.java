@@ -41,10 +41,7 @@ public class LoginManager {
 
         try {
 
-            String pathname = "src/main/resources/ba/unsa/etf/rpr/chatapp/configclient.json";
-            ClientConfigDao clientConfigDao = (new ObjectMapper()).readValue(new File(pathname), ClientConfigDao.class);
-
-            Socket cSocket = new Socket(clientConfigDao.getServerUrl(), clientConfigDao.getServerPort());
+            Socket cSocket = new Socket(ClientConfigDao.getInstance().getServerUrl(), ClientConfigDao.getInstance().getServerPort());
             PrintWriter out = new PrintWriter(cSocket.getOutputStream()); // ObjectOutputStream out = cSocket.getOutputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
 
