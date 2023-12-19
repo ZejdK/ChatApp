@@ -23,7 +23,7 @@ public class Main {
     private static ServerConfigDao LoadServerConfiguration() throws RuntimeException {
 
         try {
-            String filepath = "C:\\Users\\Zejd\\IdeaProjects\\RPR\\Projekt\\ChatApp\\ChatAppServerRelay\\resources\\configserv.json";
+            String filepath = "ChatAppServerRelay/resources/configserv.json";
             return (new ObjectMapper()).readValue(new File(filepath), ServerConfigDao.class);
         } catch (Exception e) {
             e.printStackTrace();

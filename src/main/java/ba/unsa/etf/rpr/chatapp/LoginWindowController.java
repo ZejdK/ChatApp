@@ -94,7 +94,7 @@ public class LoginWindowController {
         if (isUsernameInvalid(username) && isPasswordValid(password))
             return;
 
-        String pathname = "C:\\Users\\Zejd\\IdeaProjects\\RPR\\Projekt\\ChatApp\\src\\main\\resources\\ba\\unsa\\etf\\rpr\\chatapp\\configclient.json";
+        String pathname = "src/main/resources/ba/unsa/etf/rpr/chatapp/configclient.json";
         ClientConfigDao clientConfigDao = (new ObjectMapper()).readValue(new File(pathname), ClientConfigDao.class);
 
         // todo: prebaciti vodjenje racuna o prozoru i soketu u Main klasu
