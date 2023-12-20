@@ -1,5 +1,6 @@
 package ba.unsa.etf.rpr.chatapp;
 
+import ba.unsa.etf.rpr.chatapp.business.ServerConnectionManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,10 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyCode;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class MainWindowController {
@@ -22,19 +20,15 @@ public class MainWindowController {
     public ListView<String> mainWindow_chatLogId;
     public TextField mainWindow_chatInputId;
 
-    Socket clientSocket;
-    BufferedReader in;
-    PrintWriter out;
+    private final ServerConnectionManager serverConn;
 
     ArrayList<String> chatLog;
     ObservableList<String> chatLogList;
     Thread messageListener;
 
-    public MainWindowController(Socket clientSocket, PrintWriter out, BufferedReader in) {
+    public MainWindowController(ServerConnectionManager serverConn) {
 
-        this.clientSocket = clientSocket;
-        this.out = out;
-        this.in = in;
+        this.serverConn = serverConn;
     }
 
     @FXML
@@ -56,27 +50,20 @@ public class MainWindowController {
             messageListener = new Thread(() -> {
 
                 try {
-                    try {
-                        while (true) {
+                    while (true) {
 
-                            String msg = in.readLine();
-                            if (msg == null)
-                                break;
+                        String msg = serverConn.waitForText();
+                        if (msg == null)
+                            break;
 
-                            System.out.println("Server response: " + msg);
-                            Platform.runLater(() -> {
+                        Platform.runLater(() -> {
 
-                                chatLogList.add(msg);
-                                mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
-                            });
-                        }
-                    } catch (Exception e) { e.printStackTrace(); }
+                            chatLogList.add(msg);
+                            mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
+                        });
+                    }
 
-                    out.close();
-                    clientSocket.close();
-                    System.out.println("Connection closed");
-
-                } catch (IOException e) { e.printStackTrace(); }
+                } catch (Exception e) { e.printStackTrace(); }
             });
 
             messageListener.start();
@@ -89,13 +76,8 @@ public class MainWindowController {
 
                 String msg = mainWindow_chatInputId.getText();
                 if (msg.length() > 0) {
-
                     try {
-
-                        System.out.println("Sending: " + msg);
-                        out.println(msg);
-                        out.flush();
-
+                        serverConn.sendText(msg);
                     } catch (Exception e) { e.printStackTrace(); }
                 }
 
@@ -105,11 +87,10 @@ public class MainWindowController {
     }
 
     @FXML
-    protected void shutdown() throws IOException {
+    protected void shutdown() {
 
         System.out.println("Stopping...");
-        clientSocket.shutdownInput();
-        System.out.println("stopped");
         //messageListener.join();
+        System.out.println("stopped");
     }
 }

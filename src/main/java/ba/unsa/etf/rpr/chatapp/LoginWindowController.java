@@ -1,8 +1,7 @@
 package ba.unsa.etf.rpr.chatapp;
 
 import ba.unsa.etf.rpr.chatapp.business.LoginManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import ba.unsa.etf.rpr.chatapp.business.ServerConnectionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,10 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.net.Socket;
-import java.util.*;
-
+import java.io.IOException;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
@@ -63,7 +59,7 @@ public class LoginWindowController {
     }
 
 
-    public void onLoginWindowRegisterButtonClick(ActionEvent actionEvent) throws IOException {
+    public void onLoginWindowRegisterButtonClick(ActionEvent actionEvent) {
 
         String username = loginWindow_usernameInputId.getText();
 
@@ -83,15 +79,15 @@ public class LoginWindowController {
         String username = loginWindow_usernameInputId.getText();
         String password = loginWindow_passwordInputId.getText();
 
-        if (!loginManager.attemptLogin(username, password))
+        ServerConnectionManager serverConn = new ServerConnectionManager();
+
+        if (!loginManager.attemptLogin(serverConn, username, password))
             return;
-
-
 
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainWindow.fxml"));
 
-        MainWindowController mainWindowController = new MainWindowController(cSocket, out, in); // fieldUsername.getText()
+        MainWindowController mainWindowController = new MainWindowController(serverConn); // fieldUsername.getText()
         loader.setController(mainWindowController); // ako se ovo koristi, ne treba biti u .fxml fajlu fx:controller=""
 
         stage.setTitle("ChatApp - RPR");

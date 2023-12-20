@@ -1,15 +1,10 @@
 package ba.unsa.etf.rpr.chatapp.business;
 
-import ba.unsa.etf.rpr.chatapp.ClientConfigDao;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.*;
-import java.net.Socket;
 import java.util.HashMap;
 
 public class LoginManager {
 
-    private HashMap<String, String> serverResponseMessages;
+    private final HashMap<String, String> serverResponseMessages;
 
     public LoginManager() {
 
@@ -32,7 +27,7 @@ public class LoginManager {
     }
 
     // todo: put in a separate thread
-    public boolean attemptLogin(String username, String password) {
+    public boolean attemptLogin(ServerConnectionManager serverConn, String username, String password) {
 
         System.out.println("Attempting to register as " + username + " with " + password);
 
@@ -41,24 +36,13 @@ public class LoginManager {
 
         try {
 
-            Socket cSocket = new Socket(ClientConfigDao.getInstance().getServerUrl(), ClientConfigDao.getInstance().getServerPort());
-            PrintWriter out = new PrintWriter(cSocket.getOutputStream()); // ObjectOutputStream out = cSocket.getOutputStream();
-            BufferedReader in = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
-
             String loginLine = String.format("{\"type\":\"%s\",\"username\":\"%s\",\"password\":\"%s\"}", "login", username, password);
-
-            System.out.println("Sending: " + loginLine);
-            out.println(loginLine);
-            out.flush();
-
-            System.out.println("Awaiting server response...");
-            String serverResponse = in.readLine();
-            System.out.println("Server responsed with " + serverResponse);
+            String serverResponse = serverConn.sendText(loginLine); // stops the thread to wait for response
 
             // todo: privremeno rijesenje; treba biti vise grananja
-            if (serverResponse.equals("login_success")) {
+            if (!serverResponse.equals("login_success")) {
 
-                cSocket.close();
+                serverConn.close();
                 System.exit(0);
                 throw new RuntimeException(serverResponseMessages.get(serverResponse));
             }
