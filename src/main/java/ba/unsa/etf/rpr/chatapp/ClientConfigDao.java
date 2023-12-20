@@ -9,7 +9,7 @@ public class ClientConfigDao {
 
     private static ClientConfigDao instance = null;
 
-    private ClientConfig clientConfig;
+    private final ClientConfig clientConfig;
 
     private ClientConfigDao() {
 
@@ -36,10 +36,10 @@ public class ClientConfigDao {
     }
 
     public static String getServerUrl() {
-        return instance.clientConfig.getServerUrl();
+        return getInstance().clientConfig.getServerUrl();
     }
 
     public static int getServerPort() {
-        return instance.clientConfig.getServerPort();
+        return getInstance().clientConfig.getServerPort();
     }
 }
