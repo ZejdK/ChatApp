@@ -2,8 +2,8 @@
 Chat app project for Razvoj Programskih Rjesenja class
 
 
-#Quick start guide:
-make a configserv.json file and fill in the parameters
+# Quick start guide:
+make a configserv.json file inside the resources folder of ChatAppServerRelay module and fill in the following json
 ```
 {
     "serverPort": "",
@@ -15,14 +15,13 @@ make a configserv.json file and fill in the parameters
     "databasePassword": ""
 }
 ```
-run Main app which contains the server message relay
+then run the Main class
 
-make a configclient.json file and fill in the parameters
+make a configclient.json inside the resources folder of ChatApp module file and fill in the following json
 ```
 {
     "serverUrl": "",
     "serverPort": ""
 }
 ```
-
-and then run the client application
+and then run the ChatAppClient class
