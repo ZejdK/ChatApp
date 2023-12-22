@@ -1,6 +1,10 @@
 package ba.unsa.etf.rpr.chatapp.business;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.HashMap;
+import java.util.Map;
 
 public class LoginManager {
 
@@ -27,32 +31,22 @@ public class LoginManager {
     }
 
     // todo: put in a separate thread
-    public boolean attemptLogin(ServerConnectionManager serverConn, String username, String password) {
+    public String attemptLogin(ServerConnectionManager serverConn, String username, String password) {
 
-        System.out.println("Attempting to register as " + username + " with " + password);
-
-        if (isUsernameInvalid(username) || isPasswordInvalid(password))
-            return false;
+        System.out.println("Attempting to login as " + username + " with " + password);
 
         try {
 
             String loginLine = String.format("{\"type\":\"%s\",\"username\":\"%s\",\"password\":\"%s\"}", "login", username, password);
             String serverResponse = serverConn.sendText(loginLine); // stops the thread to wait for response
 
-            // todo: privremeno rijesenje; treba biti vise grananja
-            if (!serverResponse.equals("login_success")) {
-
-                serverConn.close();
-                System.exit(0);
-                throw new RuntimeException(serverResponseMessages.get(serverResponse));
-            }
+            Map<String, Object> map = (new ObjectMapper()).readValue(serverResponse, new TypeReference<>(){});
+            return (String) map.get("status");
 
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("EXCEPTION CAUGHT WHILE LOGGING IN\n");
-            return false;
+            return null;
         }
-
-        return true;
     }
 }

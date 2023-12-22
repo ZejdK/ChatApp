@@ -84,8 +84,36 @@ public class LoginWindowController {
 
         ServerConnectionManager serverConn = new ServerConnectionManager();
 
-        if (!loginManager.attemptLogin(serverConn, username, password))
-            return;
+        String loginResult = loginManager.attemptLogin(serverConn, username, password);
+        System.out.println("loginResult is " + loginResult);
+
+        if (loginResult == null) {
+
+            System.out.println("Warning: Received empty login response from the server");
+        }
+        else if (loginResult.equals("login_success")) {
+
+            loginWindow_usernameErrorLabel.setText("Successfully logged in...");
+            loginWindow_passwordErrorLabel.setText("");
+            launchChatWindow(serverConn);
+        }
+        else if (loginResult.equals("login_invalid")) {
+
+            loginWindow_usernameErrorLabel.setText("");
+            loginWindow_passwordErrorLabel.setText("Invalid password");
+        }
+        else if (loginResult.equals("login_notfound")) {
+
+            loginWindow_usernameErrorLabel.setText("Username doesn't exist");
+            loginWindow_passwordErrorLabel.setText("");
+        }
+        else {
+
+            System.out.println("Warning! Unknown login result value returned: " + loginResult);
+        }
+    }
+
+    private void launchChatWindow(ServerConnectionManager serverConn) throws IOException {
 
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainWindow.fxml"));
