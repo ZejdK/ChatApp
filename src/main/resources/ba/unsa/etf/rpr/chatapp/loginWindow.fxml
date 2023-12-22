@@ -10,15 +10,11 @@
          <VBox.margin>
             <Insets left="15.0" right="15.0" top="15.0" />
          </VBox.margin></TextField>
-      <Label fx:id="loginWindow_usernameErrorLabel" textFill="#e11a1a">
-         <VBox.margin>
-            <Insets top="5.0" />
-         </VBox.margin></Label>
       <PasswordField fx:id="loginWindow_passwordInputId" promptText="Password">
          <VBox.margin>
-            <Insets left="15.0" right="15.0" top="5.0" />
+            <Insets left="15.0" right="15.0" top="15.0" />
          </VBox.margin></PasswordField>
-      <Label fx:id="loginWindow_passwordErrorLabel" textFill="#e11a1a">
+      <Label fx:id="loginWindow_infoLabel" textFill="#e11a1a">
          <VBox.margin>
             <Insets top="5.0" />
          </VBox.margin></Label>

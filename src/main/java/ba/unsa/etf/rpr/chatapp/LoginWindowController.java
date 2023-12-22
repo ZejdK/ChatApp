@@ -21,9 +21,8 @@ public class LoginWindowController {
     public Button loginWindow_registerButtonId;
     public Button loginWindow_loginButtonId;
     public TextField loginWindow_usernameInputId;
-    public Label loginWindow_usernameErrorLabel;
     public PasswordField loginWindow_passwordInputId;
-    public Label loginWindow_passwordErrorLabel;
+    public Label loginWindow_infoLabel;
 
     private final LoginManager loginManager;
 
@@ -40,21 +39,20 @@ public class LoginWindowController {
         loginWindow_usernameInputId.textProperty().addListener((observableValue, o, n) -> {
 
             if (n.length() == 0)
-                loginWindow_usernameErrorLabel.setText("Username must not be empty");
+                loginWindow_infoLabel.setText("Username must not be empty");
             else if (LoginManager.isUsernameInvalid(n))
-                loginWindow_usernameErrorLabel.setText("Invalid characters in username");
+                loginWindow_infoLabel.setText("Invalid username");
             else
-                loginWindow_usernameErrorLabel.setText("");
+                loginWindow_infoLabel.setText("");
         });
 
         loginWindow_passwordInputId.textProperty().addListener((observableValue, o, n) -> {
 
             // todo: add css colors
             if (LoginManager.isPasswordInvalid(n))
-                loginWindow_passwordErrorLabel.setText("Password must be at least 6 characters");
+                loginWindow_infoLabel.setText("Password must be at least 6 characters");
             else
-                loginWindow_passwordErrorLabel.setText("");
-            // to do: // else if (!passwordCheck(n)) // password must contain at least one lower case letter, one upper case letter and one digit
+                loginWindow_infoLabel.setText("");
         });
     }
 
@@ -84,7 +82,7 @@ public class LoginWindowController {
 
         ServerConnectionManager serverConn = new ServerConnectionManager();
 
-        String loginResult = loginManager.attemptLogin(serverConn, username, password);
+        String loginResult = loginManager.attemptLogin(serverConn, username, password, false);
         System.out.println("loginResult is " + loginResult);
 
         if (loginResult == null) {
@@ -93,19 +91,16 @@ public class LoginWindowController {
         }
         else if (loginResult.equals("login_success")) {
 
-            loginWindow_usernameErrorLabel.setText("Successfully logged in...");
-            loginWindow_passwordErrorLabel.setText("");
+            loginWindow_infoLabel.setText("Successfully logged in...");
             launchChatWindow(serverConn);
         }
         else if (loginResult.equals("login_invalid")) {
 
-            loginWindow_usernameErrorLabel.setText("");
-            loginWindow_passwordErrorLabel.setText("Invalid password");
+            loginWindow_infoLabel.setText("Invalid password");
         }
         else if (loginResult.equals("login_notfound")) {
 
-            loginWindow_usernameErrorLabel.setText("Username doesn't exist");
-            loginWindow_passwordErrorLabel.setText("");
+            loginWindow_infoLabel.setText("Username doesn't exist");
         }
         else {
 
