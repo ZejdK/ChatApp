@@ -18,12 +18,12 @@ public class LoginManager {
 
     public static boolean isUsernameInvalid(String username) {
 
-        return username.length() > 3 && username.length() < 64 && !username.matches("\\w+");
+        return username.length() < 3 || username.length() > 64 || !username.matches("\\w+");
     }
 
-    public static boolean isPasswordValid(String password) {
+    public static boolean isPasswordInvalid(String password) {
 
-        return password.length() > 5 && password.length() < 70; // max pw length is 72 characters for blowfish cypher
+        return password.length() < 6 || password.length() > 70; // max pw length is 72 characters for blowfish cypher
     }
 
     // todo: put in a separate thread
@@ -31,7 +31,7 @@ public class LoginManager {
 
         System.out.println("Attempting to register as " + username + " with " + password);
 
-        if (isUsernameInvalid(username) && isPasswordValid(password))
+        if (isUsernameInvalid(username) || isPasswordInvalid(password))
             return false;
 
         try {

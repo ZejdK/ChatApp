@@ -50,7 +50,7 @@ public class LoginWindowController {
         loginWindow_passwordInputId.textProperty().addListener((observableValue, o, n) -> {
 
             // todo: add css colors
-            if (!LoginManager.isPasswordValid(n))
+            if (LoginManager.isPasswordInvalid(n))
                 loginWindow_passwordErrorLabel.setText("Password must be at least 6 characters");
             else
                 loginWindow_passwordErrorLabel.setText("");
@@ -78,6 +78,9 @@ public class LoginWindowController {
 
         String username = loginWindow_usernameInputId.getText();
         String password = loginWindow_passwordInputId.getText();
+
+        if (LoginManager.isPasswordInvalid(password) || LoginManager.isUsernameInvalid(username))
+            return;
 
         ServerConnectionManager serverConn = new ServerConnectionManager();
 
