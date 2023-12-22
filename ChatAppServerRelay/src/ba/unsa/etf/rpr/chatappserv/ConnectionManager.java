@@ -39,7 +39,7 @@ public class ConnectionManager {
         String msgOut = msg.username + ": " + msg.content;
 
         System.out.println(msgOut);
-        clients.forEach(au -> au.sendMessage(msgOut)); // todo: poslati serijalizovan objekat umjesto plain text
+        clients.forEach(au -> au.sendMessage(msgOut));
     }
 
     // todo: fali mnogo koda za zastitu

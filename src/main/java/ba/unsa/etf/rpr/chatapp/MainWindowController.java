@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyCode;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainWindowController {
@@ -35,11 +34,6 @@ public class MainWindowController {
     public void initialize() {
 
         try {
-
-            // todo: opcija za pamcenje konekcija do sada i za racune, takodjer "Remember me" checkbox
-            // todo: poslati informacije poput username, pw i ostalo tokom prijave
-            // todo: IP adresa i port trebaju se citati iz .json config fajla
-            // todo: ne zaboraviti pravilno zavrsiti threadove
 
             chatLog = new ArrayList<>();
             chatLogList = FXCollections.observableArrayList("Welcome to the chatroom");
