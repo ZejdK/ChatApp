@@ -13,7 +13,7 @@ public class DatabaseConnectionManager {
         Properties p = new Properties();
         p.load(ClassLoader.getSystemResource("server.properties").openStream());
 
-        String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", p.getProperty("db.url"), Integer.parseInt(p.getProperty("db.port")), p.getProperty("db.name"));
+        String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", p.getProperty("db.ip"), Integer.parseInt(p.getProperty("db.port")), p.getProperty("db.name"));
         databaseConnection = DriverManager.getConnection(connectionUrl, p.getProperty("db.user"), p.getProperty("db.password"));
     }
 

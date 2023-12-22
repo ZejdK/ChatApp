@@ -1,9 +1,8 @@
 package ba.unsa.etf.rpr.chatapp.business;
 
-import ba.unsa.etf.rpr.chatapp.ClientConfigDao;
-
 import java.io.*;
 import java.net.Socket;
+import java.util.Properties;
 
 public class ServerConnectionManager {
 
@@ -13,7 +12,10 @@ public class ServerConnectionManager {
 
     public ServerConnectionManager() throws IOException {
 
-        connection = new Socket(ClientConfigDao.getServerUrl(), ClientConfigDao.getServerPort());
+        Properties p = new Properties();
+        p.load(ClassLoader.getSystemResource("client.properties").openStream());
+
+        connection = new Socket(p.getProperty("server.ip"), Integer.parseInt(p.getProperty("server.port")));
         out = new PrintWriter(connection.getOutputStream());
         in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
     }
