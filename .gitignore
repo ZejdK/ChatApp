@@ -2,5 +2,5 @@ target/
 out/
 src/main/java/META-INF
 ChatAppServerRelay/src/META-INF
-/ChatAppServerRelay/resources/configserv.json
+ChatAppServerRelay/resources/server.properties
 /src/main/resources/ba/unsa/etf/rpr/chatapp/configclient.json

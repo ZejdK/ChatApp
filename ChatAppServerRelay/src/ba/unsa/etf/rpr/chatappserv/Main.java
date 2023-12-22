@@ -1,43 +1,31 @@
 package ba.unsa.etf.rpr.chatappserv;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
+import java.util.Properties;
 
 public class Main {
 
     public static void main(String[] args) {
 
         System.out.println("Logging onto the database...");
-        ServerConfigDao servConfig = LoadServerConfiguration();
-        DatabaseConnectionManager dbm = ConnectToDatabase(servConfig);
+        DatabaseConnectionManager dbm = ConnectToDatabase();
         System.out.println("Successfully connected to the database!");
 
         System.out.println("Starting connection manager...");
         try {
+
+            Properties p = new Properties();
+            p.load(ClassLoader.getSystemResource("server.properties").openStream());
+
             ConnectionManager cm = new ConnectionManager(dbm);
-            cm.startServer(servConfig.getServerPort());
+            cm.startServer(Integer.parseInt(p.getProperty("server.port")));
+
         } catch (Exception e) { e.printStackTrace(); }
     }
 
-    private static ServerConfigDao LoadServerConfiguration() throws RuntimeException {
+    private static DatabaseConnectionManager ConnectToDatabase() throws RuntimeException {
 
         try {
-            String filepath = "ChatAppServerRelay/resources/configserv.json";
-            return (new ObjectMapper()).readValue(new File(filepath), ServerConfigDao.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            String errorMsg = "Unable to start the server: There was an error loading the configuration file!";
-            System.out.println(errorMsg);
-            System.exit(0);
-            throw new RuntimeException(errorMsg);
-        }
-    }
-
-    private static DatabaseConnectionManager ConnectToDatabase(ServerConfigDao servConfig) throws RuntimeException {
-
-        try {
-            return new DatabaseConnectionManager(servConfig);
+            return new DatabaseConnectionManager();
         } catch (Exception e) {
             e.printStackTrace();
             String errorMsg = "Unable to start the server: There was an error connecting to the database!";

@@ -1,17 +1,20 @@
 package ba.unsa.etf.rpr.chatappserv;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 
 public class DatabaseConnectionManager {
 
     private final Connection databaseConnection;
-    // private ServerConfigDao serverConfigDao;
 
-    public DatabaseConnectionManager(ServerConfigDao s) throws SQLException {
+    public DatabaseConnectionManager() throws SQLException, IOException {
 
-        String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", s.getDatabaseUrl(), s.getDatabasePort(), s.getDatabaseName());
-        databaseConnection = DriverManager.getConnection(connectionUrl, s.getDatabaseUser(), s.getDatabasePassword());
-        // s = serverConfigDao;
+        Properties p = new Properties();
+        p.load(ClassLoader.getSystemResource("server.properties").openStream());
+
+        String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", p.getProperty("db.url"), Integer.parseInt(p.getProperty("db.port")), p.getProperty("db.name"));
+        databaseConnection = DriverManager.getConnection(connectionUrl, p.getProperty("db.user"), p.getProperty("db.password"));
     }
 
     public ResultSet runQuery(String query) throws SQLException {
