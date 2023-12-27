@@ -82,6 +82,7 @@ public class OnlineUser {
     public User VerifyLogin(LoginData loginData) throws IOException, UserDisconnectedException {
 
         DatabaseConnection dbConn = DatabaseConnection.getInstance();
+        UserDao.setDatabaseConnection(dbConn);
         User user = UserDao.getInstance().get(loginData.username);
 
         if (loginData.isRegistering) {
