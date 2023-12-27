@@ -15,7 +15,7 @@ public class UserDao {
 
     private UserDao() {}
 
-    public static void setDatabaseConn(DatabaseConnection databaseConnection) {
+    public static void setDatabaseConnection(DatabaseConnection databaseConnection) {
 
         dbConn = databaseConnection;
     }
@@ -98,9 +98,9 @@ public class UserDao {
             ResultSet keys = dbConn.runInsertQuery("INSERT INTO users (username, passwordhash) VALUES (?, ?)", s);
 
             keys.next();
-            System.out.println("Fetched user id: " + keys.getString("id"));
+            long userId = keys.getLong(1);
 
-            return new User(keys.getLong("id"), keys.getString("username"), keys.getString("passwordhash"));
+            return get((int) userId);
 
         } catch (Exception e) {
 
