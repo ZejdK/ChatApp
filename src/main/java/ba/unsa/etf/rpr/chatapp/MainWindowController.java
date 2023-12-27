@@ -1,6 +1,8 @@
 package ba.unsa.etf.rpr.chatapp;
 
-import ba.unsa.etf.rpr.chatapp.business.ServerConnectionManager;
+import ba.unsa.etf.rpr.ChatInput;
+import ba.unsa.etf.rpr.ChatMessage;
+import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,13 +21,12 @@ public class MainWindowController {
     public ListView<String> mainWindow_chatLogId;
     public TextField mainWindow_chatInputId;
 
-    private final ServerConnectionManager serverConn;
+    private final ServerConnection serverConn;
 
     ArrayList<String> chatLog;
     ObservableList<String> chatLogList;
-    Thread messageListener;
 
-    public MainWindowController(ServerConnectionManager serverConn) {
+    public MainWindowController(ServerConnection serverConn) {
 
         this.serverConn = serverConn;
     }
@@ -41,26 +42,19 @@ public class MainWindowController {
             mainWindow_chatLogId.setItems(chatLogList);
             mainWindow_chatLogId.setCellFactory(ComboBoxListCell.forListView(chatLogList));
 
-            messageListener = new Thread(() -> {
 
-                try {
-                    while (true) {
+            serverConn.addConsumer((Object o) -> {
 
-                        String msg = serverConn.waitForText();
-                        if (msg == null)
-                            break;
+                System.out.println("[MAIN] Received object of type " + o);
+                if (o instanceof ChatMessage chatMessage) {
 
-                        Platform.runLater(() -> {
+                    Platform.runLater(() -> {
 
-                            chatLogList.add(msg);
-                            mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
-                        });
-                    }
-
-                } catch (Exception e) { e.printStackTrace(); }
+                        chatLogList.add(chatMessage.toString());
+                        mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
+                    });
+                }
             });
-
-            messageListener.start();
 
         } catch (Exception e) { e.printStackTrace(); }
 
@@ -71,7 +65,7 @@ public class MainWindowController {
                 String msg = mainWindow_chatInputId.getText();
                 if (msg.length() > 0) {
                     try {
-                        serverConn.sendText(msg);
+                        serverConn.send(new ChatInput(msg));
                     } catch (Exception e) { e.printStackTrace(); }
                 }
 
@@ -81,10 +75,9 @@ public class MainWindowController {
     }
 
     @FXML
-    protected void shutdown() {
+    public void shutdown() throws InterruptedException {
 
-        System.out.println("Stopping...");
-        //messageListener.join();
-        System.out.println("stopped");
+        System.out.println("Shutting down...");
+        serverConn.close();
     }
 }

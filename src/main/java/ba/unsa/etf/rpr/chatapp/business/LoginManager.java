@@ -1,24 +1,54 @@
 package ba.unsa.etf.rpr.chatapp.business;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ba.unsa.etf.rpr.LoginData;
+import ba.unsa.etf.rpr.ServerResponseCode;
+import ba.unsa.etf.rpr.chatapp.MainWindowController;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class LoginManager {
 
-    private final HashMap<String, String> serverResponseMessages;
+    private final ServerConnection serverConn;
 
-    public LoginManager() {
+    public LoginManager(ServerConnection serverConn) {
 
-        serverResponseMessages = new HashMap<>();
-        serverResponseMessages.put("login_success", "Successfully logged in!");
-        serverResponseMessages.put("login_invalid", "Invalid password specified for this username");
-        serverResponseMessages.put("login_notfound", "Requested username not found");
-        serverResponseMessages.put("register_success", "Successfully registered a new account");
-        serverResponseMessages.put("register_taken", "Requested username is already in use");
+        this.serverConn = serverConn;
+
+        serverConn.addConsumer((Object o) -> {
+
+            System.out.println("received object from the server " + o);
+
+            if (o instanceof ServerResponseCode srcode) {
+
+                System.out.println("received server response code " + srcode);
+
+                if (srcode.equals(ServerResponseCode.LOGIN_SUCCESS) || srcode.equals(ServerResponseCode.REGISTER_SUCCESS)) {
+
+                    try {
+                        // todo: decouple main window from login window and close login window
+                        System.out.println("Launching the main window...");
+                        Platform.runLater(() -> {
+                            try {
+                                launchChatWindow(serverConn);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (Exception e) { e.printStackTrace(); }
+                }
+                else
+                    System.out.println("SET TEXT LABEL TO " + srcode);
+                    // loginWindow_infoLabel.setText(srcode.toString());
+            }
+        });
     }
+
 
     public static boolean isUsernameInvalid(String username) {
 
@@ -30,23 +60,33 @@ public class LoginManager {
         return password.length() < 6 || password.length() > 70; // max pw length is 72 characters for blowfish cypher
     }
 
-    // todo: put in a separate thread
-    public String attemptLogin(ServerConnectionManager serverConn, String username, String password) {
 
-        System.out.println("Attempting to login as " + username + " with " + password);
+    public void attemptLogin(String username, String password, boolean register) throws Exception {
 
-        try {
+        if (LoginManager.isPasswordInvalid(password) || LoginManager.isUsernameInvalid(username))
+            return;
 
-            String loginLine = String.format("{\"type\":\"%s\",\"username\":\"%s\",\"password\":\"%s\"}", "login", username, password);
-            String serverResponse = serverConn.sendText(loginLine); // stops the thread to wait for response
+        System.out.println("Attempting to " + (register ? "register" : "log in") + " as " + username + " with " + password);
+        serverConn.send(new LoginData(username, password, register));
+    }
 
-            Map<String, Object> map = (new ObjectMapper()).readValue(serverResponse, new TypeReference<>(){});
-            return (String) map.get("status");
+    private void launchChatWindow(ServerConnection serverConn) throws IOException {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("EXCEPTION CAUGHT WHILE LOGGING IN\n");
-            return null;
-        }
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainWindow.fxml"));
+
+        MainWindowController mainWindowController = new MainWindowController(serverConn); // fieldUsername.getText()
+        loader.setController(mainWindowController); // ako se ovo koristi, ne treba biti u .fxml fajlu fx:controller=""
+
+        stage.setTitle("ChatApp - RPR");
+        stage.setScene(new Scene(loader.load(), USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+        stage.setOnHidden(e -> {
+            try {
+                mainWindowController.shutdown();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        stage.show();
     }
 }

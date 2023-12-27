@@ -1,6 +1,6 @@
 target/
 out/
 src/main/java/META-INF
-ChatAppServerRelay/src/META-INF
-ChatAppServerRelay/resources/server.properties
 src/main/resources/client.properties
+src/main/resources/server.properties
+.idea/
