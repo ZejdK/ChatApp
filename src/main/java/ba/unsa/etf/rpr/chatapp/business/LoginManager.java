@@ -4,6 +4,7 @@ import ba.unsa.etf.rpr.LoginData;
 import ba.unsa.etf.rpr.ServerResponseCode;
 import ba.unsa.etf.rpr.chatapp.MainWindowController;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -15,10 +16,13 @@ import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 public class LoginManager {
 
     private final ServerConnection serverConn;
+    private final SimpleStringProperty infoMessage;
 
     public LoginManager(ServerConnection serverConn) {
 
         this.serverConn = serverConn;
+        infoMessage = new SimpleStringProperty("");
+
 
         serverConn.addConsumer((Object o) -> {
 
@@ -30,21 +34,15 @@ public class LoginManager {
 
                 if (srcode.equals(ServerResponseCode.LOGIN_SUCCESS) || srcode.equals(ServerResponseCode.REGISTER_SUCCESS)) {
 
-                    try {
-                        // todo: decouple main window from login window and close login window
-                        System.out.println("Launching the main window...");
-                        Platform.runLater(() -> {
-                            try {
-                                launchChatWindow(serverConn);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-                    } catch (Exception e) { e.printStackTrace(); }
+                    Platform.runLater(() -> {
+                        try {
+                            System.out.println("Launching the main window...");
+                            launchChatWindow(serverConn);
+                        } catch (IOException e) { e.printStackTrace(); }
+                    });
                 }
                 else
-                    System.out.println("SET TEXT LABEL TO " + srcode);
-                    // loginWindow_infoLabel.setText(srcode.toString());
+                    Platform.runLater(() -> infoMessage.set(srcode.toString()));
             }
         });
     }
@@ -88,5 +86,17 @@ public class LoginManager {
             }
         });
         stage.show();
+    }
+
+    public String getInfoMessage() {
+        return infoMessage.get();
+    }
+
+    public SimpleStringProperty infoMessageProperty() {
+        return infoMessage;
+    }
+
+    public void setInfoMessage(String infoMessage) {
+        this.infoMessage.set(infoMessage);
     }
 }

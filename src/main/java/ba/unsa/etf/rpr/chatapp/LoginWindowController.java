@@ -19,6 +19,7 @@ public class LoginWindowController {
 
     private final LoginManager loginManager;
 
+
     public LoginWindowController(ServerConnection serverConn) {
 
         loginManager = new LoginManager(serverConn);
@@ -28,23 +29,25 @@ public class LoginWindowController {
     @FXML
     protected void initialize() {
 
+        loginWindow_infoLabel.textProperty().bind(loginManager.infoMessageProperty());
+
         loginWindow_usernameInputId.textProperty().addListener((observableValue, o, n) -> {
 
             if (n.length() == 0)
-                loginWindow_infoLabel.setText("Username must not be empty");
+                loginManager.setInfoMessage("Username must not be empty");
             else if (LoginManager.isUsernameInvalid(n))
-                loginWindow_infoLabel.setText("Invalid username");
+                loginManager.setInfoMessage("Invalid username");
             else
-                loginWindow_infoLabel.setText("");
+                loginManager.setInfoMessage("");
         });
 
         loginWindow_passwordInputId.textProperty().addListener((observableValue, o, n) -> {
 
             // todo: add css colors
             if (LoginManager.isPasswordInvalid(n))
-                loginWindow_infoLabel.setText("Password must be at least 6 characters");
+                loginManager.setInfoMessage("Password must be at least 6 characters");
             else
-                loginWindow_infoLabel.setText("");
+                loginManager.setInfoMessage("");
         });
     }
 
