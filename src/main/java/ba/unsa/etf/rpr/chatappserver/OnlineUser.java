@@ -2,7 +2,7 @@ package ba.unsa.etf.rpr.chatappserver;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ba.unsa.etf.rpr.*;
-import ba.unsa.etf.rpr.chatapp.dao.UserDao;
+
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
