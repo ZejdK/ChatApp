@@ -2,6 +2,7 @@ package ba.unsa.etf.rpr.chatappserver;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ba.unsa.etf.rpr.*;
+import ba.unsa.etf.rpr.chatapp.dao.UserDao;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -78,17 +79,27 @@ public class OnlineUser {
     }
 
 
-    public User VerifyLogin(LoginData loginData) throws SQLException, IOException, UserDisconnectedException {
+    public User VerifyLogin(LoginData loginData) throws IOException, UserDisconnectedException {
 
         DatabaseConnection dbConn = DatabaseConnection.getInstance();
-        User user = dbConn.Lookup(loginData.username);
+        User user = UserDao.getInstance().get(loginData.username);
 
         if (loginData.isRegistering) {
 
             if (user == null) {
 
-                send(ServerResponseCode.REGISTER_SUCCESS);
-                return dbConn.CreateUser(loginData);
+                User newUser = UserDao.getInstance().add(loginData);
+                if (newUser != null) {
+
+                    send(ServerResponseCode.REGISTER_SUCCESS);
+                    return newUser;
+                }
+                else {
+
+                    send(ServerResponseCode.REGISTER_UNKNOWNFAIL);
+                    return null;
+                }
+
             }
             else {
                 send(ServerResponseCode.REGISTER_USERNAMETAKEN);
