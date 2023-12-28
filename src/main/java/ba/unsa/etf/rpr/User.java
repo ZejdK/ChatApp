@@ -1,15 +1,19 @@
 package ba.unsa.etf.rpr;
 
+import java.util.ArrayList;
+
 public class User {
 
     private long databaseId;
     private String username;
     private String passwordHash;
+    private ArrayList<String> roles;
 
     public User(long databaseId, String username, String passwordHash) {
         this.databaseId = databaseId;
         this.username = username;
         this.passwordHash = passwordHash;
+        this.roles = new ArrayList<>();
     }
 
     public long getDatabaseId() {
@@ -38,6 +42,14 @@ public class User {
 
     public String getInfo() {
         return "[" + databaseId + "] " + username;
+    }
+
+    public ArrayList<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(ArrayList<String> roles) {
+        this.roles = roles;
     }
 }
 

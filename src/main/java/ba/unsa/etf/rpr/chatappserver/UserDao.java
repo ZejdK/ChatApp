@@ -5,6 +5,8 @@ import ba.unsa.etf.rpr.LoginData;
 import ba.unsa.etf.rpr.User;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDao {
@@ -36,6 +38,7 @@ public class UserDao {
             while (rs.next()) {
 
                 user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
+                user.setRoles(GetRoles(user.getDatabaseId()));
                 ++rowCount;
             }
 
@@ -65,6 +68,7 @@ public class UserDao {
             while (rs.next()) {
 
                 user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
+                user.setRoles(GetRoles(user.getDatabaseId()));
                 ++rowCount;
             }
 
@@ -118,5 +122,21 @@ public class UserDao {
     public List<User> getAll() {
 
         return null;
+    }
+
+
+
+    private ArrayList<String> GetRoles(long id) throws SQLException {
+
+        ResultSet rs = dbConn.runQuery(String.format("SELECT * FROM permissions WHERE userid = '%d'", id));
+
+        ArrayList<String> perms = new ArrayList<>();
+        while (rs.next())
+            perms.add(rs.getString("permission"));
+
+        for (String p : perms)
+            System.out.println("Read permission for id " + id + " " + p);
+
+        return perms;
     }
 }
