@@ -12,11 +12,9 @@ public class UserDao {
     private static UserDao instance = null;
     private static DatabaseConnection dbConn = null;
 
-    private UserDao() {}
+    private UserDao() {
 
-    public static void setDatabaseConnection(DatabaseConnection databaseConnection) {
-
-        dbConn = databaseConnection;
+        dbConn = DatabaseConnection.getInstance();
     }
 
     public static UserDao getInstance() {
@@ -27,7 +25,7 @@ public class UserDao {
         return instance;
     }
 
-    public User get(int id) {
+    public User get(long id) {
 
         try {
 
