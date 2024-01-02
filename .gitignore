@@ -1,6 +1,8 @@
 target/
 out/
 src/main/java/META-INF
+src/main/java/module-info.java
 src/main/resources/client.properties
 src/main/resources/server.properties
 .idea/
+ChatApp.iml
