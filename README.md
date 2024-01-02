@@ -20,3 +20,7 @@ server.ip=127.0.0.1
 server.port=30120
 ```
 and then run the ChatAppClient class
+<br><br><br>
+Screenshots:<br>
+![Screenshot](docs/loginwindow.jpg)
+![Screenshot](docs/mainwindow.jpg)
