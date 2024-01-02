@@ -1,9 +1,9 @@
-package ba.unsa.etf.rpr.chatapp.model;
+package ba.unsa.etf.rpr.chatapp.client.model;
 
-import ba.unsa.etf.rpr.LoginData;
-import ba.unsa.etf.rpr.ServerResponseCode;
-import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
-import ba.unsa.etf.rpr.chatapp.controller.MainWindowController;
+import ba.unsa.etf.rpr.chatapp.shared.dto.LoginData;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ServerResponseCode;
+import ba.unsa.etf.rpr.chatapp.client.business.ServerConnection;
+import ba.unsa.etf.rpr.chatapp.client.controller.MainWindowController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;

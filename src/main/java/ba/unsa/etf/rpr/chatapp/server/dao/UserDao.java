@@ -1,9 +1,9 @@
-package ba.unsa.etf.rpr.chatappserver.dao;
+package ba.unsa.etf.rpr.chatapp.server.dao;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import ba.unsa.etf.rpr.LoginData;
-import ba.unsa.etf.rpr.User;
-import ba.unsa.etf.rpr.chatappserver.business.DatabaseConnection;
+import ba.unsa.etf.rpr.chatapp.server.beans.User;
+import ba.unsa.etf.rpr.chatapp.server.business.DatabaseConnection;
+import ba.unsa.etf.rpr.chatapp.shared.dto.LoginData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr;
+package ba.unsa.etf.rpr.chatapp.server.beans;
 
 import java.util.ArrayList;
 

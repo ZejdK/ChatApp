@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr;
+package ba.unsa.etf.rpr.chatapp.shared.dto;
 
 import java.io.Serializable;
 

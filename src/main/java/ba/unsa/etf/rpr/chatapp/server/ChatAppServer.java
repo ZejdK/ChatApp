@@ -1,6 +1,6 @@
-package ba.unsa.etf.rpr.chatappserver;
+package ba.unsa.etf.rpr.chatapp.server;
 
-import ba.unsa.etf.rpr.chatappserver.business.ServerLoop;
+import ba.unsa.etf.rpr.chatapp.server.business.ServerLoop;
 
 public class ChatAppServer {
 

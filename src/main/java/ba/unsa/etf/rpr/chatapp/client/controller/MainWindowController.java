@@ -1,8 +1,8 @@
-package ba.unsa.etf.rpr.chatapp.controller;
+package ba.unsa.etf.rpr.chatapp.client.controller;
 
-import ba.unsa.etf.rpr.ChatInput;
-import ba.unsa.etf.rpr.ChatMessage;
-import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ChatInput;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ChatMessage;
+import ba.unsa.etf.rpr.chatapp.client.business.ServerConnection;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

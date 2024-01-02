@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.chatappserver.exceptions;
+package ba.unsa.etf.rpr.chatapp.server.exceptions;
 
 public class UserDisconnectedException extends Exception {
 

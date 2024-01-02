@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.chatapp.business;
+package ba.unsa.etf.rpr.chatapp.client.business;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
