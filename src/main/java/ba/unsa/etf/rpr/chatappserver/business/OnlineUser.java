@@ -115,7 +115,7 @@ public class OnlineUser {
                 return null;
             }
 
-            BCrypt.Result result = BCrypt.verifyer().verify(loginData.password.toCharArray(), user.getPasswordHash());
+            BCrypt.Result result = BCrypt.verifyer().verify(loginData.password.toCharArray(), user.getPassword());
             if (result.verified) {
 
                 send(ServerResponseCode.LOGIN_SUCCESS);

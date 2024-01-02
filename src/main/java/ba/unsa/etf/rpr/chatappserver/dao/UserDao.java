@@ -39,7 +39,7 @@ public class UserDao {
             while (rs.next()) {
 
                 user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
-                user.setRoles(GetRoles(user.getDatabaseId()));
+                user.setRoles(GetRoles(user.getId()));
                 ++rowCount;
             }
 
@@ -69,7 +69,7 @@ public class UserDao {
             while (rs.next()) {
 
                 user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
-                user.setRoles(GetRoles(user.getDatabaseId()));
+                user.setRoles(GetRoles(user.getId()));
                 ++rowCount;
             }
 

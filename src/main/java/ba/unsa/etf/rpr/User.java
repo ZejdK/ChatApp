@@ -4,24 +4,24 @@ import java.util.ArrayList;
 
 public class User {
 
-    private long databaseId;
+    private long id;
     private String username;
-    private String passwordHash;
+    private String password;
     private ArrayList<String> roles;
 
-    public User(long databaseId, String username, String passwordHash) {
-        this.databaseId = databaseId;
+    public User(long id, String username, String passwordHash) {
+        this.id = id;
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.password = passwordHash;
         this.roles = new ArrayList<>();
     }
 
-    public long getDatabaseId() {
-        return databaseId;
+    public long getId() {
+        return id;
     }
 
-    public void setDatabaseId(long databaseId) {
-        this.databaseId = databaseId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -32,16 +32,16 @@ public class User {
         this.username = username;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getInfo() {
-        return "[" + databaseId + "] " + username;
+        return "[" + id + "] " + username;
     }
 
     public ArrayList<String> getRoles() {
