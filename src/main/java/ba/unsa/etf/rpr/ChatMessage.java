@@ -8,7 +8,7 @@ public class ChatMessage implements Serializable {
     public String author;
     // timestamp
 
-    public ChatMessage(String content, String author) {
+    public ChatMessage(String author, String content) {
         this.content = content;
         this.author = author;
     }
