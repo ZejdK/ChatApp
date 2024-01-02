@@ -1,7 +1,9 @@
-package ba.unsa.etf.rpr.chatappserver;
+package ba.unsa.etf.rpr.chatappserver.business;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ba.unsa.etf.rpr.*;
+import ba.unsa.etf.rpr.chatappserver.exceptions.UserDisconnectedException;
+import ba.unsa.etf.rpr.chatappserver.dao.UserDao;
 
 
 import java.io.IOException;

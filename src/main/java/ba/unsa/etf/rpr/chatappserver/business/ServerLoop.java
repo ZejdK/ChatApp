@@ -1,4 +1,6 @@
-package ba.unsa.etf.rpr.chatappserver;
+package ba.unsa.etf.rpr.chatappserver.business;
+
+import ba.unsa.etf.rpr.chatappserver.exceptions.UserDisconnectedException;
 
 import java.io.IOException;
 import java.net.ServerSocket;

@@ -1,6 +1,6 @@
-package ba.unsa.etf.rpr.chatapp;
+package ba.unsa.etf.rpr.chatapp.controller;
 
-import ba.unsa.etf.rpr.chatapp.business.LoginManager;
+import ba.unsa.etf.rpr.chatapp.model.LoginModel;
 import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,37 +17,37 @@ public class LoginWindowController {
     public PasswordField loginWindow_passwordInputId;
     public Label loginWindow_infoLabel;
 
-    private final LoginManager loginManager;
+    private final LoginModel loginModel;
 
 
     public LoginWindowController(ServerConnection serverConn) {
 
-        loginManager = new LoginManager(serverConn);
+        loginModel = new LoginModel(serverConn);
     }
 
 
     @FXML
     protected void initialize() {
 
-        loginWindow_infoLabel.textProperty().bind(loginManager.infoMessageProperty());
+        loginWindow_infoLabel.textProperty().bind(loginModel.infoMessageProperty());
 
         loginWindow_usernameInputId.textProperty().addListener((observableValue, o, n) -> {
 
             if (n.length() == 0)
-                loginManager.setInfoMessage("Username must not be empty");
-            else if (LoginManager.isUsernameInvalid(n))
-                loginManager.setInfoMessage("Invalid username");
+                loginModel.setInfoMessage("Username must not be empty");
+            else if (LoginModel.isUsernameInvalid(n))
+                loginModel.setInfoMessage("Invalid username");
             else
-                loginManager.setInfoMessage("");
+                loginModel.setInfoMessage("");
         });
 
         loginWindow_passwordInputId.textProperty().addListener((observableValue, o, n) -> {
 
             // todo: add css colors
-            if (LoginManager.isPasswordInvalid(n))
-                loginManager.setInfoMessage("Password must be at least 6 characters");
+            if (LoginModel.isPasswordInvalid(n))
+                loginModel.setInfoMessage("Password must be at least 6 characters");
             else
-                loginManager.setInfoMessage("");
+                loginModel.setInfoMessage("");
         });
     }
 
@@ -67,7 +67,7 @@ public class LoginWindowController {
 
             String username = loginWindow_usernameInputId.getText();
             String password = loginWindow_passwordInputId.getText();
-            loginManager.attemptLogin(username, password, register);
+            loginModel.attemptLogin(username, password, register);
 
         } catch (Exception e) {
 

@@ -1,8 +1,9 @@
-package ba.unsa.etf.rpr.chatapp.business;
+package ba.unsa.etf.rpr.chatapp.model;
 
 import ba.unsa.etf.rpr.LoginData;
 import ba.unsa.etf.rpr.ServerResponseCode;
-import ba.unsa.etf.rpr.chatapp.MainWindowController;
+import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
+import ba.unsa.etf.rpr.chatapp.controller.MainWindowController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
@@ -13,12 +14,12 @@ import java.io.IOException;
 
 import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
-public class LoginManager {
+public class LoginModel {
 
     private final ServerConnection serverConn;
     private final SimpleStringProperty infoMessage;
 
-    public LoginManager(ServerConnection serverConn) {
+    public LoginModel(ServerConnection serverConn) {
 
         this.serverConn = serverConn;
         infoMessage = new SimpleStringProperty("");
@@ -61,7 +62,7 @@ public class LoginManager {
 
     public void attemptLogin(String username, String password, boolean register) throws Exception {
 
-        if (LoginManager.isPasswordInvalid(password) || LoginManager.isUsernameInvalid(username))
+        if (LoginModel.isPasswordInvalid(password) || LoginModel.isUsernameInvalid(username))
             return;
 
         System.out.println("Attempting to " + (register ? "register" : "log in") + " as " + username + " with " + password);

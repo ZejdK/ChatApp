@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.chatappserver;
+package ba.unsa.etf.rpr.chatappserver.business;
 
 import java.sql.*;
 import java.util.Properties;

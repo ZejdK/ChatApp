@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.chatapp;
 
 import ba.unsa.etf.rpr.chatapp.business.ServerConnection;
+import ba.unsa.etf.rpr.chatapp.controller.LoginWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

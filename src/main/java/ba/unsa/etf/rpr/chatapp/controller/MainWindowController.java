@@ -1,4 +1,4 @@
-package ba.unsa.etf.rpr.chatapp;
+package ba.unsa.etf.rpr.chatapp.controller;
 
 import ba.unsa.etf.rpr.ChatInput;
 import ba.unsa.etf.rpr.ChatMessage;
