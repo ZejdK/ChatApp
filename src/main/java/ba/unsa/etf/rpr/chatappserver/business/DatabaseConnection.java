@@ -17,8 +17,14 @@ public class DatabaseConnection {
             Properties p = new Properties();
             p.load(ClassLoader.getSystemResource("server.properties").openStream());
 
-            String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", p.getProperty("db.ip"), Integer.parseInt(p.getProperty("db.port")), p.getProperty("db.name"));
-            databaseConnection = DriverManager.getConnection(connectionUrl, p.getProperty("db.user"), p.getProperty("db.password"));
+            String ipAddress = p.getProperty("db.ip");
+            int port = Integer.parseInt(p.getProperty("db.port"));
+            String database = p.getProperty("db.name");
+            String username = p.getProperty("db.user");
+            String password = p.getProperty("db.password");
+
+            String connectionUrl = String.format("jdbc:mysql://%s:%d/%s", ipAddress, port, database);
+            databaseConnection = DriverManager.getConnection(connectionUrl, username, password);
 
             System.out.println("Successfully connected to the database!");
 
