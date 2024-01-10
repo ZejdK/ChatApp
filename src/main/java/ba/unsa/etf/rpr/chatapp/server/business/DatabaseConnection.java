@@ -48,6 +48,26 @@ public class DatabaseConnection {
         return ps.executeQuery();
     }
 
+    public ResultSet runInQuery(String statement, Object[] params) throws SQLException {
+
+        PreparedStatement q = databaseConnection.prepareStatement(statement);
+
+        int counter = 1;
+        for (Object o : params) {
+
+            if (o instanceof Long l)
+                q.setLong(counter, l);
+            else if (o instanceof Integer i)
+                q.setInt(counter, i);
+            else if (o instanceof String s)
+                q.setString(counter, s);
+
+            ++counter;
+        }
+
+        return q.executeQuery();
+    }
+
     public ResultSet runInsertQuery(String statement, Object[] params) throws SQLException {
 
         PreparedStatement q = databaseConnection.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
