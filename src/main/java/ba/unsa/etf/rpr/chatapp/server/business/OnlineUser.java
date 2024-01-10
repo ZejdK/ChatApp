@@ -84,53 +84,56 @@ public class OnlineUser {
             ProcessUserInput(o);
     }
 
+    private User verifyUserRegister(User user, LoginData loginData) throws IOException, UserDisconnectedException {
 
-    public User VerifyLogin(LoginData loginData) throws IOException, UserDisconnectedException {
+        if (user != null) {
 
-        User user = UserDao.getInstance().get(loginData.username);
+            send(ServerResponseCode.REGISTER_USERNAMETAKEN);
+            return null;
+        }
 
-        if (loginData.isRegistering) {
+        User newUser = UserDao.getInstance().add(loginData);
+        if (newUser != null) {
 
-            if (user == null) {
-
-                User newUser = UserDao.getInstance().add(loginData);
-                if (newUser != null) {
-
-                    send(ServerResponseCode.REGISTER_SUCCESS);
-                    return newUser;
-                }
-                else {
-
-                    send(ServerResponseCode.REGISTER_UNKNOWNFAIL);
-                    return null;
-                }
-
-            }
-            else {
-                send(ServerResponseCode.REGISTER_USERNAMETAKEN);
-                return null;
-            }
+            send(ServerResponseCode.REGISTER_SUCCESS);
+            return newUser;
         }
         else {
 
-            if (user == null) {
-
-                send(ServerResponseCode.LOGIN_USERNAMENOTFOUND);
-                return null;
-            }
-
-            BCrypt.Result result = BCrypt.verifyer().verify(loginData.password.toCharArray(), user.getPassword());
-            if (result.verified) {
-
-                send(ServerResponseCode.LOGIN_SUCCESS);
-                return user;
-            }
-            else {
-
-                send(ServerResponseCode.LOGIN_INVALIDPASSWORD);
-                return null;
-            }
+            send(ServerResponseCode.REGISTER_UNKNOWNFAIL);
+            return null;
         }
+    }
+
+    private User verifyUserLogin(User user, LoginData loginData) throws IOException, UserDisconnectedException {
+
+        if (user == null) {
+
+            send(ServerResponseCode.LOGIN_USERNAMENOTFOUND);
+            return null;
+        }
+
+        BCrypt.Result result = BCrypt.verifyer().verify(loginData.password.toCharArray(), user.getPassword());
+        if (result.verified) {
+
+            send(ServerResponseCode.LOGIN_SUCCESS);
+            return user;
+        }
+        else {
+
+            send(ServerResponseCode.LOGIN_INVALIDPASSWORD);
+            return null;
+        }
+    }
+
+    public User verifyUser(LoginData loginData) throws IOException, UserDisconnectedException {
+
+        User user = UserDao.getInstance().get(loginData.username);
+
+        if (loginData.isRegistering)
+            return verifyUserRegister(user, loginData);
+        else
+            return verifyUserLogin(user, loginData);
     }
 
 
