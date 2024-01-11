@@ -14,6 +14,7 @@ public class ServerConnection {
     private final ObjectInputStream in;
     private Thread serverListener;
     private final ArrayList< Consumer<Object> > consumers;
+    private final ArrayList<Consumer<Object>> consumersToAdd;
     private boolean stopThread;
 
     public ServerConnection(String ip, int port) throws IOException {
@@ -21,13 +22,16 @@ public class ServerConnection {
         connection = new Socket(ip, port);
         out = new ObjectOutputStream(connection.getOutputStream());
         in = new ObjectInputStream(connection.getInputStream());
+
         consumers = new ArrayList<>();
+        consumersToAdd = new ArrayList<>();
+
         stopThread = false;
     }
 
     public void addConsumer(Consumer<Object> c) {
 
-        consumers.add(c);
+        consumersToAdd.add(c);
         System.out.println("there are now " + consumers.size() + " consumers");
     }
 
@@ -37,7 +41,12 @@ public class ServerConnection {
 
             try {
                 while (!stopThread) {
+
                     Object o = in.readObject();
+
+                    consumers.addAll(consumersToAdd);
+                    consumersToAdd.clear();
+
                     consumers.forEach(c -> c.accept(o));
                 }
             } catch (Exception e) { e.printStackTrace(); }
