@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="405.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@../css/adminView.css" />
+    </stylesheets>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar prefWidth="627.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox>
+               <children>
+                  <Button fx:id="addUser" mnemonicParsing="false" onAction="#onAddUserAction" styleClass="toolbarButton">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="editUser" mnemonicParsing="false" onAction="#onEditUserAction" styleClass="toolbarButton">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="deleteUser" mnemonicParsing="false" onAction="#onDeleteUserAction" styleClass="toolbarButton">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Separator orientation="VERTICAL">
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding></Separator>
+                  <Button fx:id="refreshUsers" mnemonicParsing="false" onAction="#onRefreshUsersAction" styleClass="toolbarButton">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin></Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <TableView fx:id="userTable" prefHeight="450.0" prefWidth="442.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="userIdColumn" prefWidth="73.0" text="UserID" />
+          <TableColumn fx:id="usernameColumn" prefWidth="99.0" text="Username" />
+            <TableColumn fx:id="rolesColumn" prefWidth="215.0" text="Roles" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="infoLabel" text="Idle">
+               <HBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

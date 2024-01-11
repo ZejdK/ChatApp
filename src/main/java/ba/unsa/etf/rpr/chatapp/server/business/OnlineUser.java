@@ -6,10 +6,7 @@ import ba.unsa.etf.rpr.chatapp.server.beans.User;
 import ba.unsa.etf.rpr.chatapp.server.dao.RoleDao;
 import ba.unsa.etf.rpr.chatapp.server.exceptions.UserDisconnectedException;
 import ba.unsa.etf.rpr.chatapp.server.dao.UserDao;
-import ba.unsa.etf.rpr.chatapp.shared.dto.ChatInput;
-import ba.unsa.etf.rpr.chatapp.shared.dto.ChatMessage;
-import ba.unsa.etf.rpr.chatapp.shared.dto.LoginData;
-import ba.unsa.etf.rpr.chatapp.shared.dto.ServerResponseCode;
+import ba.unsa.etf.rpr.chatapp.shared.dto.*;
 
 
 import java.io.IOException;
@@ -17,7 +14,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class OnlineUser {
 
@@ -139,6 +139,11 @@ public class OnlineUser {
             return verifyUserLogin(user, loginData);
     }
 
+    private boolean isUserAdmin() {
+
+        // TODO: 1 and 2 are, for now, hardcoded to admin and moderator roles
+        return roles.stream().anyMatch(r -> r.getId() == 1 || r.getId() == 2);
+    }
 
     // this function assumes it will be called upon a valid user who is logged in
     public void processUserInput(Object o) {
@@ -148,8 +153,35 @@ public class OnlineUser {
             System.out.println("MSG from user " + nickname + ": " + chatInput);
             onMessageCallback.accept(new ChatMessage(nickname, chatInput.content));
         }
-    }
+        else if (o instanceof ServerRequest serverRequest) {
 
+            if (!isUserAdmin()) {
+
+                // log this
+                System.out.println("Attempted to request serverRequest without enough privileges");
+                return;
+            }
+
+            if (serverRequest == ServerRequest.ADMINREQUEST_GETUSERS)
+
+                try {
+
+                    ArrayList<User> users = UserDao.getInstance().getAll();
+
+                    List<UserView> userViewList = users.stream().map(u -> {
+
+                        String roleString = u.getRoles().stream()
+                                                .map(roleId -> RoleDao.getInstance().get(roleId).getName())
+                                                .collect(Collectors.joining(","));
+
+                        return new UserView(u.getId(), u.getUsername(), roleString);
+                    }).toList();
+
+                    send(new UserCollection(userViewList));
+
+                } catch (Exception e) { e.printStackTrace(); }
+        }
+    }
 
     public void startListener() {
 

@@ -1,17 +1,27 @@
 package ba.unsa.etf.rpr.chatapp.client.controller;
 
-import ba.unsa.etf.rpr.chatapp.shared.dto.ChatInput;
-import ba.unsa.etf.rpr.chatapp.shared.dto.ChatMessage;
+import ba.unsa.etf.rpr.chatapp.client.ChatAppClient;
 import ba.unsa.etf.rpr.chatapp.client.business.ServerConnection;
+import ba.unsa.etf.rpr.chatapp.client.model.AdminModel;
+import ba.unsa.etf.rpr.chatapp.shared.dto.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class MainWindowController {
 
@@ -23,7 +33,9 @@ public class MainWindowController {
 
     private final ServerConnection serverConn;
 
-    ObservableList<String> chatLogList;
+    private ObservableList<String> chatLogList;
+
+    // TODO: MainWindowModel
 
     public MainWindowController(ServerConnection serverConn) {
 
@@ -79,7 +91,49 @@ public class MainWindowController {
     }
 
     public void menubarAdminPanelAction(ActionEvent actionEvent) throws IOException {
-        System.out.println("hi");
+
+        AdminModel adminModel = new AdminModel();
+
+        FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("model/adminWindow.fxml"));
+        AdminWindowController adminWindowController = new AdminWindowController(adminModel);
+        loader.setController(adminWindowController);
+
+        Stage stage = new Stage();
+        stage.setTitle("Admin panel");
+        stage.setScene(new Scene(loader.load(), USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+        stage.setResizable(false);
+
+
+        serverConn.addConsumer((Object o) -> {
+
+            if (o instanceof ServerResponseCode serverResponseCode && serverResponseCode == ServerResponseCode.COLLECTION_REQUEST_FAILED) {
+
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Server error");
+                alert.setHeaderText("Unable to fetch data from the server");
+                alert.setContentText("");
+                alert.showAndWait();
+                updateStatusLabel("Idle");
+            }
+            else if (o instanceof UserCollection users) {
+
+                adminWindowController.setData(users);
+                updateStatusLabel("Successfully received response!");
+            }
+        });
+
+
+        updateStatusLabel("Sending request to the server...");
+        serverConn.send(ServerRequest.ADMINREQUEST_GETUSERS);
+        updateStatusLabel("Waiting for the server response...");
+
+
+        stage.setOnHidden((e) -> {
+
+            // TODO: serverConn.removeConsumer(); // the one that was added above
+        });
+
+        stage.show();
     }
 
     private void updateStatusLabel(String text) {

@@ -1,0 +1,32 @@
+
+
+#addUser {
+    -fx-graphic: url("../icon/user-plus.png");
+}
+
+#editUser {
+    -fx-graphic: url("../icon/user-edit.png");
+}
+
+#deleteUser {
+    -fx-graphic: url("../icon/user-x.png");
+}
+
+#refreshUsers {
+    -fx-graphic: url("../icon/refresh.png");
+}
+
+
+.toolbarButton {
+    -fx-background-color: transparent;
+    -fx-border-width: 0
+}
+
+.toolbarButton:hover {
+    -fx-background-color: lightgray;
+}
+
+.toolbarButton:pressed {
+    -fx-background-color: gray;
+}
+

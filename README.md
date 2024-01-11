@@ -12,3 +12,7 @@ then run the ChatAppClient class
 Screenshots:<br><br>
 ![Screenshot](docs/loginwindow.jpg)
 ![Screenshot](docs/mainwindow.jpg)
+![Screenshot](docs/adminwindow.jpg)
+
+
+icons sourced from https://github.com/feathericons/feather
