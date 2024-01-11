@@ -78,6 +78,10 @@ public class MainWindowController {
         serverConn.close();
     }
 
+    public void menubarAdminPanelAction(ActionEvent actionEvent) throws IOException {
+        System.out.println("hi");
+    }
+
     private void updateStatusLabel(String text) {
 
         Platform.runLater(() -> statusBarLabel.setText(text));
