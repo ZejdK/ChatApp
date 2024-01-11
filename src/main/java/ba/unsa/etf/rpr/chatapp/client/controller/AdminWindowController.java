@@ -31,7 +31,7 @@ public class AdminWindowController {
     public Button deleteUser;
     public Button editRoles;
 
-    public Label infoLabel;
+    public Label statusLabel;
 
     private final AdminModel adminModel;
 
@@ -70,10 +70,11 @@ public class AdminWindowController {
 
         Platform.runLater(() -> {
 
-            infoLabel.setText("Received data");
+            userTableData.clear();
+            statusLabel.setText("Received data");
             for (UserView u : users.users())
                 userTableData.add(new UserViewProperty(u));
-            infoLabel.setText("Processed data");
+            statusLabel.setText("Processed data");
         });
     }
 
@@ -121,5 +122,13 @@ public class AdminWindowController {
     public void shutdown() {
 
         System.out.println("Shutting down admin window...");
+    }
+
+    public void updateStatusBar(String text) {
+
+        Platform.runLater(() -> {
+
+            statusLabel.setText(text);
+        });
     }
 }
