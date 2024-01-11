@@ -91,12 +91,12 @@ public class UserDao {
         }
     }
 
-    public User add(LoginData loginData) {
+    public User add(User user) {
 
         try {
 
-            String[] s = { loginData.username, BCrypt.withDefaults().hashToString(12, loginData.password.toCharArray()) };
-            ResultSet keys = dbConn.runInsertQuery("INSERT INTO users (username, passwordhash) VALUES (?, ?)", s);
+            String[] s = { user.getUsername(), BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray()) };
+            ResultSet keys = dbConn.runInsertQuery("INSERT INTO users (username, password) VALUES (?, ?)", s);
 
             keys.next();
             long userId = keys.getLong(1);

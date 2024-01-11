@@ -95,7 +95,7 @@ public class OnlineUser {
             return null;
         }
 
-        User newUser = UserDao.getInstance().add(loginData);
+        User newUser = UserDao.getInstance().add(new User(0, loginData.username, loginData.password));
         if (newUser != null) {
 
             send(ServerResponseCode.REGISTER_SUCCESS);
