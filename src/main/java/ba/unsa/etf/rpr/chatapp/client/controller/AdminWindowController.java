@@ -9,11 +9,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+import static javafx.scene.layout.Region.USE_COMPUTED_SIZE;
 
 public class AdminWindowController {
 
@@ -33,9 +37,22 @@ public class AdminWindowController {
 
     private ObservableList<UserViewProperty> userTableData;
 
-    public AdminWindowController(AdminModel a) {
+    public AdminWindowController(ServerConnection serverConnection, AdminModel a) {
 
-        adminModel = a;
+        this.adminModel = a;
+        this.serverConnection = serverConnection;
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("fxml/editUser.fxml"));
+            editUserWindowController = new EditUserWindowController(this::onUserInputFinished);
+            loader.setController(editUserWindowController);
+
+            userDataInputStage = new Stage();
+            userDataInputStage.setTitle("Input user data");
+            userDataInputStage.setScene(new Scene(loader.load(), USE_COMPUTED_SIZE, USE_COMPUTED_SIZE));
+            userDataInputStage.setResizable(false);
+        } catch (Exception e ) { e.printStackTrace(); }
     }
 
     @FXML
@@ -75,6 +92,26 @@ public class AdminWindowController {
 
         infoLabel.setText("add user");
     }
+
+    public void onUserInputFinished(UserView newUser, String password) {
+
+        editUserWindowController.clearFields();
+        userDataInputStage.close();
+        statusLabel.setText("Sending user input data to server");
+
+        try {
+
+            if (currentlyEdited == null) // TODO: find a better solution
+                serverConnection.send(new AddUserCommand(newUser.username(), password, newUser.roleList()));
+            else
+                // TODO: ne zaboraviti provjeru ako vec ima taj username
+                serverConnection.send(new EditUserCommand(currentlyEdited.getId(), newUser.username(), newUser.roleList()));
+
+        } catch (IOException e) { e.printStackTrace(); }
+
+        currentlyEdited = null;
+    }
+
 
     public void onRefreshUsersAction(ActionEvent actionEvent) {
 
