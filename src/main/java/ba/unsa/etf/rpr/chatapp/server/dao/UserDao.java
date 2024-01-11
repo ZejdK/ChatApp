@@ -3,7 +3,7 @@ package ba.unsa.etf.rpr.chatapp.server.dao;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import ba.unsa.etf.rpr.chatapp.server.beans.User;
 import ba.unsa.etf.rpr.chatapp.server.business.DatabaseConnection;
-import ba.unsa.etf.rpr.chatapp.shared.dto.LoginData;
+import ba.unsa.etf.rpr.chatapp.server.exceptions.UserNotFoundException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -111,7 +111,26 @@ public class UserDao {
         }
     }
 
-    public User update(User user) {
+    public User update(User user) throws UserNotFoundException, SQLException {
+
+        User oldUser = get(user.getId());
+
+        System.out.println("Udpdating user with id" + user.getId());
+
+        if (oldUser == null)
+            throw new UserNotFoundException("Could not find user with id " + user.getId());
+
+        System.out.printf("old %s, new %s", oldUser.getUsername(), user.getUsername());
+
+        if (!user.getUsername().equals(oldUser.getUsername())) {
+
+            System.out.println("Updatin'");
+            Object[] params = { user.getUsername(), oldUser.getUsername() };
+            dbConn.runUpdateQuery("UPDATE users SET username = ? WHERE username = ?", params);
+        }
+        // TODO: finish updating roles
+        // if (!user.getRoleString().equals(oldUser.getRoleString()))
+
         return null;
     }
 
