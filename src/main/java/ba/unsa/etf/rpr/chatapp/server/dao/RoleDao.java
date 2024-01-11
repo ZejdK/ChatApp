@@ -54,16 +54,19 @@ public class RoleDao {
 
     public ArrayList<Role> get(ArrayList<Long> ids) throws SQLException {
 
-        DatabaseConnection dbConn = DatabaseConnection.getInstance();
-
-        String sqlParameters = ids.stream().map(v -> "?").collect(Collectors.joining(", "));
-        String query = String.format("SELECT * FROM roles WHERE id IN (%s)", sqlParameters);
-
         ArrayList<Role> r = new ArrayList<>();
 
-        ResultSet rs = dbConn.runInQuery(query, ids.toArray());
-        while (rs.next())
-            r.add(new Role(rs.getInt("id"), rs.getString("name"), rs.getString("color"), rs.getString("description")));
+        if (ids.size() > 0) {
+
+            DatabaseConnection dbConn = DatabaseConnection.getInstance();
+
+            String sqlParameters = ids.stream().map(v -> "?").collect(Collectors.joining(", "));
+            String query = String.format("SELECT * FROM roles WHERE id IN (%s)", sqlParameters);
+
+            ResultSet rs = dbConn.runInQuery(query, ids.toArray());
+            while (rs.next())
+                r.add(new Role(rs.getInt("id"), rs.getString("name"), rs.getString("color"), rs.getString("description")));
+        }
 
         return r;
     }
