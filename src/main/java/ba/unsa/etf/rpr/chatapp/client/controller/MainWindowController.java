@@ -59,7 +59,7 @@ public class MainWindowController {
 
                     Platform.runLater(() -> {
 
-                        chatLogList.add(chatMessage.toString());
+                        chatLogList.add(formatChatMessage(chatMessage));
                         mainWindow_chatLogId.scrollTo(chatLogList.size() - 1);
                     });
                 }
@@ -134,6 +134,11 @@ public class MainWindowController {
         });
 
         stage.show();
+    }
+
+    private String formatChatMessage(ChatMessage chatMessage) {
+
+        return chatMessage.author() + ": " + chatMessage.content();
     }
 
     private void updateStatusLabel(String text) {
