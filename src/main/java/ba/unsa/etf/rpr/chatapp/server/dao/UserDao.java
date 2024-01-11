@@ -8,7 +8,6 @@ import ba.unsa.etf.rpr.chatapp.shared.dto.LoginData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserDao {
 
@@ -120,16 +119,21 @@ public class UserDao {
         return null;
     }
 
-    public List<User> getAll() {
+    public ArrayList<User> getAll() throws SQLException {
 
-        return null;
+        ResultSet rs = dbConn.runQuery("SELECT * FROM users");
+
+        ArrayList<User> users = new ArrayList<>();
+        while (rs.next()) {
+
+            User u = new User(rs.getLong("id"), rs.getString(2), rs.getString(3));
+            u.setRoles(getRoles(u.getId()));
+
+            users.add(u);
+        }
+
+        return users;
     }
-
-
-
-    private ArrayList<String> GetRoles(long id) throws SQLException {
-
-        ResultSet rs = dbConn.runQuery(String.format("SELECT * FROM permissions WHERE userid = '%d'", id));
 
     private ArrayList<Long> getRoles(long id) throws SQLException {
 
