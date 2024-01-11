@@ -31,15 +31,15 @@ public class MainWindowController {
     public TextField mainWindow_chatInputId;
     public Label statusBarLabel;
 
-    private final ServerConnection serverConn;
+    private final ServerConnection serverConnection;
 
     private ObservableList<String> chatLogList;
 
     // TODO: MainWindowModel
 
-    public MainWindowController(ServerConnection serverConn) {
+    public MainWindowController(ServerConnection serverConnection) {
 
-        this.serverConn = serverConn;
+        this.serverConnection = serverConnection;
     }
 
     @FXML
@@ -52,7 +52,7 @@ public class MainWindowController {
             mainWindow_chatLogId.setItems(chatLogList);
             mainWindow_chatLogId.setCellFactory(ComboBoxListCell.forListView(chatLogList));
 
-            serverConn.addConsumer((Object o) -> {
+            serverConnection.addConsumer((Object o) -> {
 
                 System.out.println("[MAIN] Received object of type " + o);
                 if (o instanceof ChatMessage chatMessage) {
@@ -74,7 +74,7 @@ public class MainWindowController {
                 String msg = mainWindow_chatInputId.getText();
                 if (msg.length() > 0) {
                     try {
-                        serverConn.send(new ChatInput(msg));
+                        serverConnection.send(new ChatInput(msg));
                     } catch (Exception e) { e.printStackTrace(); }
                 }
 
@@ -87,7 +87,7 @@ public class MainWindowController {
     public void shutdown() throws InterruptedException {
 
         System.out.println("Shutting down...");
-        serverConn.close();
+        serverConnection.close();
     }
 
     public void menubarAdminPanelAction(ActionEvent actionEvent) throws IOException {
@@ -95,7 +95,7 @@ public class MainWindowController {
         AdminModel adminModel = new AdminModel();
 
         FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("model/adminWindow.fxml"));
-        AdminWindowController adminWindowController = new AdminWindowController(adminModel);
+        AdminWindowController adminWindowController = new AdminWindowController(serverConnection, adminModel);
         loader.setController(adminWindowController);
 
         Stage stage = new Stage();
@@ -104,7 +104,7 @@ public class MainWindowController {
         stage.setResizable(false);
 
 
-        serverConn.addConsumer((Object o) -> {
+        serverConnection.addConsumer((Object o) -> {
 
             if (o instanceof ServerResponseCode serverResponseCode && serverResponseCode == ServerResponseCode.COLLECTION_REQUEST_FAILED) {
 
@@ -124,7 +124,7 @@ public class MainWindowController {
 
 
         updateStatusLabel("Sending request to the server...");
-        serverConn.send(ServerRequest.ADMINREQUEST_GETUSERS);
+        serverConnection.send(ServerRequest.ADMINREQUEST_GETUSERS);
         updateStatusLabel("Waiting for the server response...");
 
 
