@@ -87,4 +87,22 @@ public class DatabaseConnection {
 
         return q.getGeneratedKeys();
     }
+
+    public void runUpdateQuery(String statement, Object[] params) throws SQLException {
+
+        PreparedStatement q = databaseConnection.prepareStatement(statement);
+
+        int counter = 1;
+        for (Object o : params) {
+
+            if (o instanceof String str)
+            { System.out.println("Updating " + counter + " with " + o); q.setString(counter, str); }
+            else if (o instanceof Integer n)
+                q.setInt(counter, n);
+
+            ++counter;
+        }
+
+        q.executeUpdate();
+    }
 }
