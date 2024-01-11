@@ -19,6 +19,7 @@ public class MainWindowController {
     public ListView<String> mainWindow_channelListId;
     public ListView<String> mainWindow_chatLogId;
     public TextField mainWindow_chatInputId;
+    public Label statusBarLabel;
 
     private final ServerConnection serverConn;
 
@@ -75,5 +76,10 @@ public class MainWindowController {
 
         System.out.println("Shutting down...");
         serverConn.close();
+    }
+
+    private void updateStatusLabel(String text) {
+
+        Platform.runLater(() -> statusBarLabel.setText(text));
     }
 }
