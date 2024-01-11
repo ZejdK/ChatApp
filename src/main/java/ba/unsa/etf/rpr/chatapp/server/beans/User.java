@@ -9,10 +9,10 @@ public class User {
     private String password;
     private ArrayList<Long> roles;
 
-    public User(long id, String username, String passwordHash) {
+    public User(long id, String username, String password) {
         this.id = id;
         this.username = username;
-        this.password = passwordHash;
+        this.password = password;
         this.roles = new ArrayList<>();
     }
 

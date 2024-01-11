@@ -55,11 +55,10 @@ public class OnlineUser {
         onEventCallback.accept(nickname + " is connecting...");
     }
 
-
     // this method is executed in an infinite loop inside startListener
-    private void ThreadLogic() throws IOException, ClassNotFoundException, UserDisconnectedException, SQLException {
+    private void threadLogic() throws IOException, ClassNotFoundException, UserDisconnectedException, SQLException {
 
-        ValidityCheck();
+        validityCheck();
 
         Object o = in.readObject();
         System.out.println("Read from " + nickname + o);
@@ -71,7 +70,7 @@ public class OnlineUser {
 
                 System.out.println("User wants to log in with data " + loginData);
 
-                User user = VerifyLogin(loginData);
+                User user = verifyUser(loginData);
 
                 if (user != null) {
 
@@ -85,7 +84,7 @@ public class OnlineUser {
             }
         }
         else
-            ProcessUserInput(o);
+            processUserInput(o);
     }
 
     private User verifyUserRegister(User user, LoginData loginData) throws IOException, UserDisconnectedException {
@@ -142,7 +141,7 @@ public class OnlineUser {
 
 
     // this function assumes it will be called upon a valid user who is logged in
-    public void ProcessUserInput(Object o) {
+    public void processUserInput(Object o) {
 
         if (o instanceof ChatInput chatInput) {
 
@@ -157,7 +156,7 @@ public class OnlineUser {
         listener = new Thread(() -> {
             try {
                 while (true) {
-                    ThreadLogic();
+                    threadLogic();
                 }
             } catch (IOException | ClassNotFoundException | UserDisconnectedException | SQLException e) {
                 e.printStackTrace();
@@ -168,20 +167,18 @@ public class OnlineUser {
         listener.start();
     }
 
-
     public void send(Object o) throws IOException, UserDisconnectedException {
 
-        ValidityCheck();
+        validityCheck();
 
         System.out.println("Attempting to send to " + (loggedIn ? user.getInfo() : nickname) + "data: " + o);
         out.writeObject(o);
         out.flush();
     }
 
-
     public void drop() throws IOException, InterruptedException, UserDisconnectedException {
 
-        ValidityCheck();
+        validityCheck();
 
         out.close();
         in.close();
@@ -194,8 +191,7 @@ public class OnlineUser {
         // eventually clean everything up in the database and stuff
     }
 
-
-    public void ValidityCheck() throws UserDisconnectedException {
+    public void validityCheck() throws UserDisconnectedException {
 
         if (!valid)
             throw new UserDisconnectedException("Accessed user is no longer connected to the server!");
