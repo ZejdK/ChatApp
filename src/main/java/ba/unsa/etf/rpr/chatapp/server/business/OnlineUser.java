@@ -1,7 +1,9 @@
 package ba.unsa.etf.rpr.chatapp.server.business;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import ba.unsa.etf.rpr.chatapp.server.beans.Role;
 import ba.unsa.etf.rpr.chatapp.server.beans.User;
+import ba.unsa.etf.rpr.chatapp.server.dao.RoleDao;
 import ba.unsa.etf.rpr.chatapp.server.exceptions.UserDisconnectedException;
 import ba.unsa.etf.rpr.chatapp.server.dao.UserDao;
 import ba.unsa.etf.rpr.chatapp.shared.dto.ChatInput;
@@ -30,6 +32,7 @@ public class OnlineUser {
 
     private String nickname;
     private User user;
+    private ArrayList<Role> roles;
     private Thread listener;
 
     private final Consumer<ChatMessage> onMessageCallback;
@@ -75,6 +78,7 @@ public class OnlineUser {
                     System.out.println("User has successfully logged in!");
                     loggedIn = true;
                     this.user = user;
+                    this.roles = RoleDao.getInstance().get(user.getRoles());
                     onEventCallback.accept(nickname + " has joined the channel");
                     nickname = user.getUsername();
                 }

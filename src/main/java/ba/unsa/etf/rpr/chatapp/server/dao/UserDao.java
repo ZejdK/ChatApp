@@ -38,8 +38,8 @@ public class UserDao {
 
             while (rs.next()) {
 
-                user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
-                user.setRoles(GetRoles(user.getId()));
+                user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+                user.setRoles(getRoles(user.getId()));
                 ++rowCount;
             }
 
@@ -68,8 +68,8 @@ public class UserDao {
 
             while (rs.next()) {
 
-                user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("passwordhash"));
-                user.setRoles(GetRoles(user.getId()));
+                user = new User(rs.getLong("id"), rs.getString("username"), rs.getString("password"));
+                user.setRoles(getRoles(user.getId()));
                 ++rowCount;
             }
 
@@ -131,11 +131,15 @@ public class UserDao {
 
         ResultSet rs = dbConn.runQuery(String.format("SELECT * FROM permissions WHERE userid = '%d'", id));
 
-        ArrayList<String> perms = new ArrayList<>();
-        while (rs.next())
-            perms.add(rs.getString("permission"));
+    private ArrayList<Long> getRoles(long id) throws SQLException {
 
-        for (String p : perms)
+        ResultSet rs = dbConn.runQuery(String.format("SELECT * FROM roleownership WHERE userid = '%d'", id));
+
+        ArrayList<Long> perms = new ArrayList<>();
+        while (rs.next())
+            perms.add(rs.getLong("roleId"));
+
+        for (Long p : perms)
             System.out.println("Read permission for id " + id + " " + p);
 
         return perms;

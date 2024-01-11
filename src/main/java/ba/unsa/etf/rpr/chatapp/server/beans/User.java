@@ -7,7 +7,7 @@ public class User {
     private long id;
     private String username;
     private String password;
-    private ArrayList<String> roles;
+    private ArrayList<Long> roles;
 
     public User(long id, String username, String passwordHash) {
         this.id = id;
@@ -44,11 +44,11 @@ public class User {
         return "[" + id + "] " + username;
     }
 
-    public ArrayList<String> getRoles() {
+    public ArrayList<Long> getRoles() {
         return roles;
     }
 
-    public void setRoles(ArrayList<String> roles) {
+    public void setRoles(ArrayList<Long> roles) {
         this.roles = roles;
     }
 }
