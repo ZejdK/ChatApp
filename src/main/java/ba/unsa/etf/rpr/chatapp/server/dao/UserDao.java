@@ -115,23 +115,18 @@ public class UserDao {
 
         User oldUser = get(user.getId());
 
-        System.out.println("Udpdating user with id" + user.getId());
-
         if (oldUser == null)
             throw new UserNotFoundException("Could not find user with id " + user.getId());
 
-        System.out.printf("old %s, new %s", oldUser.getUsername(), user.getUsername());
-
         if (!user.getUsername().equals(oldUser.getUsername())) {
 
-            System.out.println("Updatin'");
             Object[] params = { user.getUsername(), oldUser.getUsername() };
             dbConn.runUpdateQuery("UPDATE users SET username = ? WHERE username = ?", params);
         }
         // TODO: finish updating roles
         // if (!user.getRoleString().equals(oldUser.getRoleString()))
 
-        return null;
+        return UserDao.getInstance().get(user.getId());
     }
 
     public void delete(long id) throws SQLException {
