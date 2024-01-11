@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.KeyCode;
 
-import java.util.ArrayList;
 
 public class MainWindowController {
 
@@ -23,7 +22,6 @@ public class MainWindowController {
 
     private final ServerConnection serverConn;
 
-    ArrayList<String> chatLog;
     ObservableList<String> chatLogList;
 
     public MainWindowController(ServerConnection serverConn) {
@@ -36,12 +34,10 @@ public class MainWindowController {
 
         try {
 
-            chatLog = new ArrayList<>();
             chatLogList = FXCollections.observableArrayList("Welcome to the chatroom");
 
             mainWindow_chatLogId.setItems(chatLogList);
             mainWindow_chatLogId.setCellFactory(ComboBoxListCell.forListView(chatLogList));
-
 
             serverConn.addConsumer((Object o) -> {
 
