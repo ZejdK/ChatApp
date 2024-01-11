@@ -94,7 +94,7 @@ public class MainWindowController {
 
         AdminModel adminModel = new AdminModel();
 
-        FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("model/adminWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("fxml/adminWindow.fxml"));
         AdminWindowController adminWindowController = new AdminWindowController(serverConnection, adminModel);
         loader.setController(adminWindowController);
 

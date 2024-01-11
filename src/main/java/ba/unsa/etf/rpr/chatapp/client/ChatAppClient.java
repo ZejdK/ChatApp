@@ -22,7 +22,7 @@ public class ChatAppClient extends Application {
 
         ServerConnection s = new ServerConnection(p.getProperty("server.ip"), Integer.parseInt(p.getProperty("server.port")));
 
-        FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("loginWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(ChatAppClient.class.getResource("fxml/loginWindow.fxml"));
         LoginWindowController loginWindowController = new LoginWindowController(s);
         loader.setController(loginWindowController);
 

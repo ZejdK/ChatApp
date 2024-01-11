@@ -72,7 +72,7 @@ public class LoginModel {
     private void launchChatWindow(ServerConnection serverConn) throws IOException {
 
         Stage stage = new Stage();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ba/unsa/etf/rpr/chatapp/client/fxml/mainWindow.fxml"));
 
         MainWindowController mainWindowController = new MainWindowController(serverConn); // fieldUsername.getText()
         loader.setController(mainWindowController); // ako se ovo koristi, ne treba biti u .fxml fajlu fx:controller=""
