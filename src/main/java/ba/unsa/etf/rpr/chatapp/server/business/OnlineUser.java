@@ -151,7 +151,7 @@ public class OnlineUser {
         if (o instanceof ChatInput chatInput) {
 
             System.out.println("MSG from user " + nickname + ": " + chatInput);
-            onMessageCallback.accept(new ChatMessage(nickname, chatInput.content));
+            onMessageCallback.accept(new ChatMessage(nickname, chatInput.content()));
         }
         else if (o instanceof ServerRequest serverRequest) {
 
