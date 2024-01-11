@@ -4,6 +4,7 @@ import ba.unsa.etf.rpr.chatapp.client.beans.UserViewProperty;
 import ba.unsa.etf.rpr.chatapp.client.model.AdminModel;
 import ba.unsa.etf.rpr.chatapp.shared.dto.UserCollection;
 import ba.unsa.etf.rpr.chatapp.shared.dto.UserView;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,10 +51,13 @@ public class AdminWindowController {
 
     public void setData(UserCollection users) {
 
-        infoLabel.setText("Received data");
-        for (UserView u : users.users())
-            userTableData.add(new UserViewProperty(u));
-        infoLabel.setText("Processed data");
+        Platform.runLater(() -> {
+
+            infoLabel.setText("Received data");
+            for (UserView u : users.users())
+                userTableData.add(new UserViewProperty(u));
+            infoLabel.setText("Processed data");
+        });
     }
 
 
