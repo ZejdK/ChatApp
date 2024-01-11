@@ -1,7 +1,11 @@
 package ba.unsa.etf.rpr.chatapp.server.beans;
 
+import ba.unsa.etf.rpr.chatapp.server.dao.RoleDao;
+
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class User implements Serializable {
 
@@ -51,6 +55,11 @@ public class User implements Serializable {
 
     public void setRoles(ArrayList<Long> roles) {
         this.roles = roles;
+    }
+
+    public String getRoleString() throws SQLException {
+
+        return RoleDao.getInstance().get(this.roles).stream().map(Role::getName).collect(Collectors.joining(","));
     }
 }
 
