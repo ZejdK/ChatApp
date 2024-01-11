@@ -89,7 +89,7 @@ public class AdminWindowController {
         infoLabel.setText("edit user");
     }
 
-    public void onAddUserAction(ActionEvent actionEvent) {
+    public void onAddUserAction(ActionEvent actionEvent) throws IOException {
 
         infoLabel.setText("add user");
     }
@@ -116,7 +116,15 @@ public class AdminWindowController {
 
     public void onRefreshUsersAction(ActionEvent actionEvent) {
 
-        infoLabel.setText("refreshing users");
+        try {
+
+            statusLabel.setText("Sending request to the server...");
+            serverConnection.send(ServerRequest.ADMINREQUEST_GETUSERS);
+            statusLabel.setText("Waiting for the server response...");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void shutdown() {
