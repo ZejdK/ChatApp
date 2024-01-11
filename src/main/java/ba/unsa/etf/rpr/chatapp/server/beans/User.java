@@ -1,8 +1,9 @@
 package ba.unsa.etf.rpr.chatapp.server.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
 
     private long id;
     private String username;
