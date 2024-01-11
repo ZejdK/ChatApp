@@ -1,9 +1,16 @@
 package ba.unsa.etf.rpr.chatapp.client.controller;
 
+import ba.unsa.etf.rpr.chatapp.client.ChatAppClient;
 import ba.unsa.etf.rpr.chatapp.client.beans.UserViewProperty;
+import ba.unsa.etf.rpr.chatapp.client.business.ServerConnection;
 import ba.unsa.etf.rpr.chatapp.client.model.AdminModel;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ServerRequest;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ServerResponseCode;
 import ba.unsa.etf.rpr.chatapp.shared.dto.UserCollection;
 import ba.unsa.etf.rpr.chatapp.shared.dto.UserView;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.AddUserCommand;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.DeleteUserCommand;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.EditUserCommand;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +41,10 @@ public class AdminWindowController {
     public Label statusLabel;
 
     private final AdminModel adminModel;
+    private final ServerConnection serverConnection;
+    private Stage userDataInputStage;
+    private EditUserWindowController editUserWindowController;
+    private UserViewProperty currentlyEdited;
 
     private ObservableList<UserViewProperty> userTableData;
 
@@ -64,6 +75,24 @@ public class AdminWindowController {
 
         userTableData = FXCollections.observableArrayList() ;
         userTable.setItems(userTableData);
+
+        serverConnection.addConsumer((Object o) -> {
+
+            if (o instanceof ServerResponseCode serverResponseCode && serverResponseCode == ServerResponseCode.USERCRUD_SUCCESS) {
+
+                updateStatusBar("User operation successfully executed");
+
+                try {
+
+                    serverConnection.send(ServerRequest.ADMINREQUEST_GETUSERS);
+                } catch (Exception e) { System.out.println(e.getMessage()); }
+            }
+            else if (o instanceof UserCollection users) {
+
+                System.out.println("[AWC] HI");
+                setData(users);
+            }
+        });
     }
 
     public void setData(UserCollection users) {
@@ -79,19 +108,54 @@ public class AdminWindowController {
     }
 
 
-    public void onDeleteUserAction(ActionEvent actionEvent) {
+    public void onDeleteUserAction(ActionEvent actionEvent) throws IOException {
 
-        infoLabel.setText("delete user");
+        ObservableList<UserViewProperty> userSelected;
+        userSelected = userTable.getSelectionModel().getSelectedItems();
+
+        if (userSelected.size() == 0) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Selection error");
+            alert.setHeaderText("No user was selected for deletion");
+            alert.setContentText("");
+            alert.showAndWait();
+
+            return;
+        }
+
+        serverConnection.send(new DeleteUserCommand(userSelected.get(0).getId()));
+
+        statusLabel.setText("Waiting for delete user input");
     }
 
     public void onEditUserAction(ActionEvent actionEvent) {
 
-        infoLabel.setText("edit user");
+        ObservableList<UserViewProperty> userSelected;
+        userSelected = userTable.getSelectionModel().getSelectedItems();
+
+        if (userSelected.size() == 0) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Selection error");
+            alert.setHeaderText("No user was selected for editing");
+            alert.setContentText("");
+            alert.showAndWait();
+
+            return;
+        }
+
+        currentlyEdited = userSelected.get(0);
+        editUserWindowController.setFields(currentlyEdited.getUsername(), currentlyEdited.getRoleList());
+
+        userDataInputStage.show();
+        statusLabel.setText("Waiting for edit user input");
     }
 
-    public void onAddUserAction(ActionEvent actionEvent) throws IOException {
+    public void onAddUserAction(ActionEvent actionEvent) {
 
-        infoLabel.setText("add user");
+        userDataInputStage.show();
+        statusLabel.setText("Waiting for add user input");
     }
 
     public void onUserInputFinished(UserView newUser, String password) {
@@ -134,9 +198,6 @@ public class AdminWindowController {
 
     public void updateStatusBar(String text) {
 
-        Platform.runLater(() -> {
-
-            statusLabel.setText(text);
-        });
+        Platform.runLater(() -> statusLabel.setText(text));
     }
 }

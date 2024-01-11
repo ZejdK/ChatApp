@@ -117,7 +117,6 @@ public class MainWindowController {
             }
             else if (o instanceof UserCollection users) {
 
-                adminWindowController.setData(users);
                 updateStatusLabel("Successfully received response!");
             }
         });

@@ -7,6 +7,9 @@ import ba.unsa.etf.rpr.chatapp.server.dao.RoleDao;
 import ba.unsa.etf.rpr.chatapp.server.exceptions.UserDisconnectedException;
 import ba.unsa.etf.rpr.chatapp.server.dao.UserDao;
 import ba.unsa.etf.rpr.chatapp.shared.dto.*;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.AddUserCommand;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.DeleteUserCommand;
+import ba.unsa.etf.rpr.chatapp.shared.dto.command.EditUserCommand;
 
 
 import java.io.IOException;
@@ -153,7 +156,7 @@ public class OnlineUser {
             System.out.println("MSG from user " + nickname + ": " + chatInput);
             onMessageCallback.accept(new ChatMessage(nickname, chatInput.content()));
         }
-        else if (o instanceof ServerRequest serverRequest) {
+        else {
 
             if (!isUserAdmin()) {
 
@@ -162,24 +165,59 @@ public class OnlineUser {
                 return;
             }
 
-            if (serverRequest == ServerRequest.ADMINREQUEST_GETUSERS)
+            if (o instanceof ServerRequest serverRequest) {
+
+                if (serverRequest == ServerRequest.ADMINREQUEST_GETUSERS)
+
+                    try {
+
+                        ArrayList<User> users = UserDao.getInstance().getAll();
+
+                        List<UserView> userViewList = users.stream().map(u -> {
+
+                            String roleString = u.getRoles().stream()
+                                    .map(roleId -> RoleDao.getInstance().get(roleId).getName())
+                                    .collect(Collectors.joining(","));
+
+                            return new UserView(u.getId(), u.getUsername(), roleString);
+                        }).toList();
+
+                        send(new UserCollection(userViewList));
+
+                    } catch (Exception e) { e.printStackTrace(); }
+            }
+            else if (o instanceof AddUserCommand addUserCommand) {
+
+                User newUser = new User(0, addUserCommand.username(), addUserCommand.password());
+
+                //ArrayList<Long> roleIds = RoleDao.getInstance().getRoleIds(addUserCommand.roleList());
+                //newUser.setRoles(roleIds);
 
                 try {
 
-                    ArrayList<User> users = UserDao.getInstance().getAll();
-
-                    List<UserView> userViewList = users.stream().map(u -> {
-
-                        String roleString = u.getRoles().stream()
-                                                .map(roleId -> RoleDao.getInstance().get(roleId).getName())
-                                                .collect(Collectors.joining(","));
-
-                        return new UserView(u.getId(), u.getUsername(), roleString);
-                    }).toList();
-
-                    send(new UserCollection(userViewList));
-
+                    UserDao.getInstance().add(newUser);
+                    send(ServerResponseCode.USERCRUD_SUCCESS);
                 } catch (Exception e) { e.printStackTrace(); }
+            }
+            else if (o instanceof EditUserCommand editUserCommand) {
+
+                User editedUser = new User(editUserCommand.id(), editUserCommand.newUsername(), editUserCommand.newRoleList());
+
+                try {
+
+                    UserDao.getInstance().update(editedUser);
+                    send(ServerResponseCode.USERCRUD_SUCCESS);
+                } catch (Exception e) { e.printStackTrace(); }
+            }
+            else if (o instanceof DeleteUserCommand deleteUserCommand) {
+
+                try {
+
+                    System.out.println("Deleting user with id " + deleteUserCommand.id());
+                    UserDao.getInstance().delete(deleteUserCommand.id());
+                    send(ServerResponseCode.USERCRUD_SUCCESS);
+                } catch (Exception e) { e.printStackTrace(); }
+            }
         }
     }
 
