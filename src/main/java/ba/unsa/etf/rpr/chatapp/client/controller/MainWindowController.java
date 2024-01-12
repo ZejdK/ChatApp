@@ -81,6 +81,8 @@ public class MainWindowController {
                 mainWindow_chatInputId.clear();
             }
         });
+
+        updateStatusLabel("Successfully logged in");
     }
 
     @FXML
