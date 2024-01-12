@@ -39,9 +39,9 @@ public class OnlineUser {
     private Thread listener;
 
     private final Consumer<ChatMessage> onMessageCallback;
-    private final Consumer<String> onEventCallback;
+    private final Consumer<ChatMessage> onEventCallback;
 
-    public OnlineUser(Socket socket, Consumer<ChatMessage> onMessageCallback, Consumer<String> onEventCallback) throws IOException {
+    public OnlineUser(Socket socket, Consumer<ChatMessage> onMessageCallback, Consumer<ChatMessage> onEventCallback) throws IOException {
 
         this.socket = socket;
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -55,7 +55,7 @@ public class OnlineUser {
         this.onMessageCallback = onMessageCallback;
         this.onEventCallback = onEventCallback;
 
-        onEventCallback.accept(nickname + " is connecting...");
+        onEventCallback.accept(new ChatMessage("SERVER", nickname + " is connecting..."));
     }
 
     // this method is executed in an infinite loop inside startListener
@@ -82,8 +82,8 @@ public class OnlineUser {
                     loggedIn = true;
                     this.user = user;
                     this.roles = (userRoles.isEmpty()) ? new ArrayList<>() : RoleDao.getInstance().get(userRoles);
-                    onEventCallback.accept(nickname + " has joined the channel");
                     nickname = user.getUsername();
+                    onEventCallback.accept(new ChatMessage("SERVER", nickname + " has joined the channel"));
                 }
             }
         }
@@ -268,7 +268,7 @@ public class OnlineUser {
         socket.close();
         listener.join();
         valid = false;
-        onEventCallback.accept(user.getInfo() + " has left the channel");
+        onEventCallback.accept(new ChatMessage("SERVER", user.getInfo() + " has left the channel"));
         System.out.println(user.getInfo() + " HAS LEFT THE CHANNEL AND WAS INVALIDATED");
 
         // eventually clean everything up in the database and stuff

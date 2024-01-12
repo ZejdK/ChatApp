@@ -1,6 +1,7 @@
 package ba.unsa.etf.rpr.chatapp.server.business;
 
 import ba.unsa.etf.rpr.chatapp.server.exceptions.UserDisconnectedException;
+import ba.unsa.etf.rpr.chatapp.shared.dto.ChatMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -55,7 +56,7 @@ public class ServerLoop {
     }
 
     // sends a message
-    public void inform(String message) {
+    public void inform(ChatMessage message) {
 
         broadcast(message);
     }

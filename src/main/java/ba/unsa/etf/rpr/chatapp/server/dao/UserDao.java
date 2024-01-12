@@ -131,7 +131,6 @@ public class UserDao {
 
     public void delete(long id) throws SQLException {
 
-
         Object[] params = { id };
         dbConn.runDeleteQuery("DELETE FROM users WHERE id = ?", params);
         dbConn.runDeleteQuery("DELETE FROM roleownership WHERE userId = ?", params);
