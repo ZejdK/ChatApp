@@ -88,6 +88,26 @@ public class DatabaseConnection {
         return q.getGeneratedKeys();
     }
 
+    public void runDeleteQuery(String statement, Object[] params) throws SQLException {
+
+        PreparedStatement q = databaseConnection.prepareStatement(statement);
+
+        int counter = 1;
+        for (Object o : params) {
+
+            if (o instanceof String str)
+                q.setString(counter, str);
+            else if (o instanceof Long l)
+                q.setLong(counter, l);
+            else if (o instanceof Integer n)
+                q.setInt(counter, n);
+
+            ++counter;
+        }
+
+        q.executeUpdate();
+    }
+
     public void runUpdateQuery(String statement, Object[] params) throws SQLException {
 
         PreparedStatement q = databaseConnection.prepareStatement(statement);
