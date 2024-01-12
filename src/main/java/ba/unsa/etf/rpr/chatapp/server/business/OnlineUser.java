@@ -77,10 +77,11 @@ public class OnlineUser {
 
                 if (user != null) {
 
+                    ArrayList<Long> userRoles = user.getRoles();
                     System.out.println("User has successfully logged in!");
                     loggedIn = true;
                     this.user = user;
-                    this.roles = RoleDao.getInstance().get(user.getRoles());
+                    this.roles = (userRoles.isEmpty()) ? new ArrayList<>() : RoleDao.getInstance().get(userRoles);
                     onEventCallback.accept(nickname + " has joined the channel");
                     nickname = user.getUsername();
                 }
